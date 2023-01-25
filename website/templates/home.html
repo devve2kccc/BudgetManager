@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+<h2 align="center">Home</h2>
+<ul class="list-group" id="addmoney">
+  <li class="list-group-item active">Ammout</li>
+  <li class="list-group-item">{{ sum }}</li>
+</ul>
+<button id="myBtn" class="btn btn-primary">Add bill</button>
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <form method="POST">
+      <div class="inputDiv">
+        <h5>Ammount</h5>
+        <textarea name="addmoney" id="addmoney" class="form-control"></textarea>
+        <h5>Name</h5>
+        <textarea
+          name="transationname"
+          id="transationname"
+          class="form-control"
+        ></textarea>
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+    </form>
+  </div>
+</div>
+<br />
+<table id="data" class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Ammout</th>
+      <th>Date</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for money in user.mains %}
+    <tr>
+      <td>{{ money.id }}</td>
+      <td>{{ money.transationname }}</td>
+      <td>{{ money.ammout }}</td>
+      <td>{{ money.date }}</td>
+      <td>{{ money.type }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
