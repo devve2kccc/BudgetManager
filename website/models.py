@@ -9,16 +9,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
-    total_money = db.Column(db.Float, default=0) # test
+    # total_money = db.Column(db.Float, default=0)
     mains = db.relationship('Main')
-
-    def add_money(self, amount):
-        self.total_money += amount
-        db.session.commit()
-
-    def spend_money(self, amount):
-        self.total_money -= amount
-        db.session.commit()
 
 class Main(db.Model):
     id = db.Column(db.Integer, primary_key=True)
