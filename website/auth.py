@@ -36,6 +36,11 @@ def crypto():
 def stocks():
     return render_template('stocks.html', user= current_user)
 
+@auth.route('/banks')
+@login_required
+def banks():
+    return render_template('banks.html', user= current_user)
+
 @auth.route('/profile')
 @login_required
 def profile():
