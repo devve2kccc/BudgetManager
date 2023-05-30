@@ -1,7 +1,9 @@
-from . import db  
-from flask_login import UserMixin 
+from . import db
+from flask_login import UserMixin
 from sqlalchemy.sql import func
 from sqlalchemy import Float
+from sqlalchemy.orm import object_session
+from sqlalchemy import event
 
 
 class User(db.Model, UserMixin):
@@ -16,15 +18,30 @@ class User(db.Model, UserMixin):
     # um utilizador pode ter muitos bancos
     banks = db.relationship('Bank', backref='user')
 
+
 class Main(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    transaction_id = db.Column(db.Integer)  # Unique transaction ID
     transaction_name = db.Column(db.String(10000))
-    transaction_type = db.Column(db.String(50))  # Add transaction_type column
+    # Add transaction_type column
+    transaction_type = db.Column(db.String(10000))
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    date = db.Column(db.Date)
+    category = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    @staticmethod
+    def generate_transaction_id(mapper, connection, target):
+        session = object_session(target)
+        max_transaction_id = session.query(func.max(Main.transaction_id)).filter_by(user_id=target.user_id).scalar()
 
+        if max_transaction_id is not None:
+            target.transaction_id = max_transaction_id + 1
+        else:
+            target.transaction_id = 1
+
+# Associate the event listener to generate transaction ID
+event.listen(Main, 'before_insert', Main.generate_transaction_id)
 
 class Bank(db.Model):
     id = db.Column(db.Integer, primary_key=True)

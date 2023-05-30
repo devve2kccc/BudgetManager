@@ -1,24 +1,45 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
-<br>
-<br>
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+<br />
+<br />
 <ul class="list-group" id="addmoney">
   <li class="list-group-item active">Ammout</li>
   <li class="list-group-item">{{ sum }}</li>
 </ul>
-<button id="myBtn" class="btn btn-primary">Add bill</button>
+<button id="myBtn" class="btn btn-primary">Add Expenses</button>
 <div id="myModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
     <form method="POST">
       <div class="inputDiv">
+        <h5>Expense Name</h5>
+        <textarea name="transationname" id="transationname" class="form-control"></textarea>
         <h5>Ammount</h5>
         <textarea name="addmoney" id="addmoney" class="form-control"></textarea>
-        <h5>Name</h5>
-        <textarea
-          name="transationname"
-          id="transationname"
-          class="form-control"
-        ></textarea>
+        <div>
+          <label for="date">Date:</label>
+          <input type="date" id="date" name="date" required />
+        </div>
+        <div>
+          <label for="category">Category:</label>
+          <select id="category" name="category">
+            <option value="">Select an existing category</option>
+            <option value="food">Food and Dining</option>
+            <option value="transportation">Transportation</option>
+            <option value="housing">Housing</option>
+            <option value="health">Health and Wellness</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="travel">Travel</option>
+            <option value="personal_care">Personal Care</option>
+            <option value="education">Education</option>
+            <option value="gifts">Gifts and Donations</option>
+            <option value="miscellaneous">Miscellaneous</option>
+          </select>
+        </div>
+        <div>
+          <label for="custom_category">Or enter a custom category:</label>
+          <input type="text" id="custom_category" name="custom_category">
+        </div>
         <button type="submit" class="btn btn-primary">Add</button>
       </div>
     </form>
@@ -33,7 +54,8 @@
     <tr>
       <th>ID</th>
       <th>Name</th>
-      <th>Ammout</th>
+      <th>Amount</th>
+      <th>Category</th>
       <th>Date</th>
       <th>Type</th>
     </tr>
@@ -41,11 +63,12 @@
   <tbody>
     {% for money in user.mains %}
     <tr>
-      <td>{{ money.id }}</td>
-      <td>{{ money.transationname }}</td>
-      <td>{{ money.ammout }}</td>
+      <td>{{ money.transaction_id }}</td>
+      <td>{{ money.transaction_name }}</td>
+      <td>{{ money.amount }}</td>
+      <td>{{ money.category }}</td>
       <td>{{ money.date }}</td>
-      <td>{{ money.type }}</td>
+      <td>{{ money.transaction_type }}</td>
     </tr>
     {% endfor %}
   </tbody>
