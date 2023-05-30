@@ -3,8 +3,8 @@
 <br />
 <br />
 <ul class="list-group" id="addmoney">
-  <li class="list-group-item active">Ammout</li>
-  <li class="list-group-item">{{ sum }}</li>
+  <li class="list-group-item active">Total Expenses</li>
+  <li class="list-group-item">{{ total_expense }}</li>
 </ul>
 <button id="myBtn" class="btn btn-primary">Add Expenses</button>
 <div id="myModal" class="modal">
@@ -49,18 +49,19 @@
 <br />
 <br />
 <br />
-<form method="POST" id="filter-form">
-  <div class="filter-options">
-    <label for="filter">Filter by:</label>
-    <select id="filter" name="filter">
-      <option value="all">All</option>
-      <option value="month">Month</option>
-      <option value="week">Week</option>
-      <option value="day">Day</option>
-    </select>
-    <button type="submit" class="btn btn-primary">Filter</button>
-  </div>
-</form>
+<div class="filter-options">
+  <label for="filter">Filter by:</label>
+  <select id="filter" name="filter">
+    <option value="all">All</option>
+    <option value="month">Month</option>
+    <option value="week">Week</option>
+    <option value="day">Day</option>
+    <option value="range">Range</option>
+  </select>
+  <input type="date" id="start-date" name="start-date" style="display: none;">
+  <input type="date" id="end-date" name="end-date" style="display: none;">
+  <button id="filter-button" class="btn btn-primary">Filter</button>
+</div>
 <table id="data" class="table table-striped">
   <thead>
     <tr>
@@ -73,7 +74,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for money in user.mains %}
+    {% for money in transactions %}
     <tr>
       <td>{{ money.transaction_id }}</td>
       <td>{{ money.transaction_name }}</td>

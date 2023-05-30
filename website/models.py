@@ -39,6 +39,16 @@ class Main(db.Model):
             target.transaction_id = max_transaction_id + 1
         else:
             target.transaction_id = 1
+    
+    def serialize(self):
+        return {
+            'transaction_id': self.id,
+            'transaction_name': self.transaction_name,
+            'amount': self.amount,
+            'category': self.category,
+            'date': self.date.strftime('%Y-%m-%d'),
+            'transaction_type': self.transaction_type
+        }
 
 # Associate the event listener to generate transaction ID
 event.listen(Main, 'before_insert', Main.generate_transaction_id)

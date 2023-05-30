@@ -33,29 +33,35 @@ window.onclick = function (event) {
   }
 };
 
-document
-  .getElementById("filter-form")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-    var filter = document.getElementById("filter").value;
 
-    // Make an AJAX request to fetch filtered data
-    fetch("/filter", {
-      method: "POST",
-      body: JSON.stringify({ filter: filter }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // Update the table with filtered data
-        var tableBody = document.getElementById("data").querySelector("tbody");
-        tableBody.innerHTML = "";
+document.getElementById('filter-button').addEventListener('click', function() {
+  var filter = document.getElementById('filter').value;
+  var startDate = document.getElementById('start-date').value;
+  var endDate = document.getElementById('end-date').value;
 
-        data.forEach((money) => {
-          var row = document.createElement("tr");
-          row.innerHTML = `
+  var data = { filter: filter };
+  if (filter === 'range') {
+    data.start_date = startDate;
+    data.end_date = endDate;
+  }
+
+  // Make an AJAX request to fetch filtered data
+  fetch('/filter', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Update the table with filtered data
+    var tableBody = document.getElementById('data').querySelector('tbody');
+    tableBody.innerHTML = '';
+
+    data.transactions.forEach(money => {
+      var row = document.createElement('tr');
+      row.innerHTML = `
         <td>${money.transaction_id}</td>
         <td>${money.transaction_name}</td>
         <td>${money.amount}</td>
@@ -63,8 +69,8 @@ document
         <td>${money.date}</td>
         <td>${money.transaction_type}</td>
       `;
-          tableBody.appendChild(row);
-        });
-      })
-      .catch((error) => console.error(error));
-  });
+      tableBody.appendChild(row);
+    });
+  })
+  .catch(error => console.error(error));
+});
