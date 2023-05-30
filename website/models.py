@@ -18,11 +18,12 @@ class User(db.Model, UserMixin):
 
 class Main(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    transationname = db.Column(db.String(10000))
-    type = db.Column(db.String(10000))
-    ammout = db.Column(db.Float, nullable=False)
+    transaction_name = db.Column(db.String(10000))
+    transaction_type = db.Column(db.String(50))  # Add transaction_type column
+    amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
 
 class Bank(db.Model):

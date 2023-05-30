@@ -16,16 +16,16 @@ def home():
         transationname = request.form.get('transationname')
         addmoney = request.form.get('addmoney')
         if len(addmoney) < 1:
-            flash('Ammout Error', category='error')
+            flash('Amount Error', category='error')
         else:
-            new_add = Main(ammout=addmoney, transationname=transationname, type='ADD',  user_id=current_user.id)
+            new_add = Main(amount=addmoney, transaction_name=transationname, transaction_type='ADD',  user_id=current_user.id)
             db.session.add(new_add)
             db.session.commit()
             flash('Money added', category='success') 
 
     
       # sum all values on the table
-    sum = db.session.query(db.func.sum(Main.ammout)).filter_by(user_id=current_user.id).scalar()
+    sum = db.session.query(db.func.sum(Main.amount)).filter_by(user_id=current_user.id).scalar()
     return render_template("home.html", user=current_user, sum=sum)
 
 
