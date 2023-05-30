@@ -49,6 +49,18 @@
 <br />
 <br />
 <br />
+<form method="POST" id="filter-form">
+  <div class="filter-options">
+    <label for="filter">Filter by:</label>
+    <select id="filter" name="filter">
+      <option value="all">All</option>
+      <option value="month">Month</option>
+      <option value="week">Week</option>
+      <option value="day">Day</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </div>
+</form>
 <table id="data" class="table table-striped">
   <thead>
     <tr>

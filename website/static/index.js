@@ -32,3 +32,39 @@ window.onclick = function (event) {
     modal.style.display = "none";
   }
 };
+
+document
+  .getElementById("filter-form")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    var filter = document.getElementById("filter").value;
+
+    // Make an AJAX request to fetch filtered data
+    fetch("/filter", {
+      method: "POST",
+      body: JSON.stringify({ filter: filter }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Update the table with filtered data
+        var tableBody = document.getElementById("data").querySelector("tbody");
+        tableBody.innerHTML = "";
+
+        data.forEach((money) => {
+          var row = document.createElement("tr");
+          row.innerHTML = `
+        <td>${money.transaction_id}</td>
+        <td>${money.transaction_name}</td>
+        <td>${money.amount}</td>
+        <td>${money.category}</td>
+        <td>${money.date}</td>
+        <td>${money.transaction_type}</td>
+      `;
+          tableBody.appendChild(row);
+        });
+      })
+      .catch((error) => console.error(error));
+  });

@@ -7,6 +7,7 @@ from . import db
 import random
 import json
 from datetime import datetime
+from sqlalchemy import extract, func, and_, or_, desc, asc
 
 views = Blueprint('views', __name__)
 
@@ -35,7 +36,7 @@ def home():
             db.session.add(new_add)
             db.session.commit()
             flash('Expense created successfully!', category='success')
-
+            
       # sum all values on the table
     sum = db.session.query(db.func.sum(Main.amount)).filter_by(
         user_id=current_user.id).scalar()
