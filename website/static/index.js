@@ -1,11 +1,3 @@
-function deleteNote(noteId) {
-  fetch("/delete-tran", {
-    method: "POST",
-    body: JSON.stringify({ noteId: noteId }),
-  }).then((_res) => {
-    window.location.href = "/";
-  });
-}
 
 // Get the modal
 var modal = document.getElementById("myModal");
@@ -32,6 +24,27 @@ window.onclick = function (event) {
     modal.style.display = "none";
   }
 };
+
+
+// Get the income modal
+var inmodal = document.getElementById("myIncomeModal");
+var inbtn = document.getElementById("myBtnin");
+var inspan = document.getElementsByClassName("closein")[0];
+
+inbtn.onclick = function () {
+  inmodal.style.display = "block";
+};
+
+inspan.onclick = function () {
+  inmodal.style.display = "none";
+};
+
+window.onclick = function (event) {
+  if (event.target == inmodal) {
+    inmodal.style.display = "none";
+  }
+};
+
 
 
 document.getElementById('filter-button').addEventListener('click', function() {
@@ -96,9 +109,4 @@ function deleteTransaction(transactionId, csrfToken) {
     .catch((error) => {
       console.error("Error:", error);
     });
-}
-
-function editTransaction(transactionId) {
-  // Redirect to the edit page with the transaction ID
-  window.location.href = "/edit/" + transactionId;
 }

@@ -12,7 +12,7 @@ views = Blueprint('views', __name__)
 @login_required
 def home():
     if request.method == 'POST':
-        transationname = request.form.get('transationname')
+        transationname = request.form.get('transactionname')
         addmoney = request.form.get('addmoney')
         date_str = request.form.get('date')
         category = request.form.get('category')

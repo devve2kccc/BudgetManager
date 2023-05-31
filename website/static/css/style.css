@@ -3,25 +3,55 @@ body {
   font-family: "Open Sans", sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: rgb(255, 255, 255);
+  color: #ffffff;
   margin: 0;
   padding: 0;
 }
 
-.list-group {
-  width: 100px;
+#expense-box {
+  font-size: 16px;
+  position: fixed;
+  top: 90px;
+  left: 20;
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+  text-align: center;
 }
 
-
-table {
-  border-radius: 10px;
-  background-color: #7289da;
-  color: #000000;
+#income-box {
+  font-size: 16px;
+  position: fixed;
+  top: 90px;
+  left: 350PX; /* Adjust the left position as needed */
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+  text-align: center;
+  z-index: 1;
 }
 
-.money {
-  display: table;
-  align-items: center;
+#expense-box li.list-group-item.active {
+  background-color: #d62929;
+}
+#income-box li.list-group-item.active {
+  background-color: #7bf393;
+}
+
+#myBtn {
+  width: 200px;
+  margin-top: 130px;
+  position: relative;
+  background-color: #d87070;
+}
+
+#myBtnin {
+  width: 200px;
+  margin-top: 130px;
+  margin-left: 30px;
+  position: relative;
+  z-index: 1;
+  background-color: #b3ff9e;
 }
 
 .modal {
@@ -42,23 +72,24 @@ table {
   padding: 20px;
   border: 1px solid #23282c;
   width: 80%;
-  max-width: 500px; /* Adjust the maximum width as needed */
+  max-width: 500px;
 }
 
 .close {
-  color: #fff;
+  color: #ffffff;
   float: right;
   font-size: 28px;
   font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
   cursor: pointer;
 }
 
+.closein {
+  color: #ffffff;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
 form {
   display: flex;
   flex-direction: column;
@@ -69,7 +100,7 @@ form {
 }
 
 .inputDiv label {
-  color: #fff;
+  color: #ffffff;
   margin-bottom: 5px;
 }
 
@@ -79,7 +110,7 @@ form {
   width: 100%;
   padding: 8px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
 }
 
 .inputDiv select {
@@ -89,7 +120,7 @@ form {
 .btn {
   padding: 10px 20px;
   background-color: #007bff;
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -98,3 +129,53 @@ form {
 .btn:hover {
   background-color: #0069d9;
 }
+
+.table {
+  border-radius: 5px;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.table th {
+  background-color: #23282c;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  text-align: center;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgb(255, 255, 255);
+}
+
+.expense {
+  background-color: #ff8c8c; /* Set the background color for expense rows */
+}
+
+.income {
+  background-color: #8cff8c; /* Set the background color for income rows */
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.filter-options label {
+  margin-right: 10px;
+}
+
+.filter-options select,
+.filter-options input[type="date"] {
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.filter-options button {
+  margin-left: 10px;
+}
+
