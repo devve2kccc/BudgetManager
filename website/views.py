@@ -90,6 +90,18 @@ def filter_transactions():
     # Return the filtered transactions as JSON response
     return jsonify(transactions=[transaction.serialize() for transaction in filtered_transactions])
 
+@views.route('/delete/<int:transaction_id>', methods=['POST'])
+@login_required
+def delete_transaction(transaction_id):
+    transaction = Main.query.get(transaction_id)
+    if transaction:
+        if transaction.user_id == current_user.id:
+            db.session.delete(transaction)
+            db.session.commit()
+            return jsonify({"message": "Transaction deleted successfully."})
+
+    return jsonify({"message": "Failed to delete the transaction."}), 400
+
 
 # apply here the same logic of the home route, but for banks, and make the request to database to get the values
 @views.route('/banks', methods=['GET', 'POST'])

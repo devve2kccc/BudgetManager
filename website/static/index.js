@@ -74,3 +74,31 @@ document.getElementById('filter-button').addEventListener('click', function() {
   })
   .catch(error => console.error(error));
 });
+
+
+
+function deleteTransaction(transactionId, csrfToken) {
+  fetch(`/delete/${transactionId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "Transaction deleted successfully.") {
+        location.reload(); // Refresh the page after successful deletion
+      } else {
+        console.log("Failed to delete the transaction.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function editTransaction(transactionId) {
+  // Redirect to the edit page with the transaction ID
+  window.location.href = "/edit/" + transactionId;
+}

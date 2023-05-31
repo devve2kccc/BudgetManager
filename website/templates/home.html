@@ -71,6 +71,7 @@
       <th>Category</th>
       <th>Date</th>
       <th>Type</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -82,6 +83,9 @@
       <td>{{ money.category }}</td>
       <td>{{ money.date }}</td>
       <td>{{ money.transaction_type }}</td>
+      <td>
+        <button class="btn btn-danger" onclick="deleteTransaction({{ money.id }})">Delete</button>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
