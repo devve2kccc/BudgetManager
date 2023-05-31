@@ -1,9 +1,9 @@
 
 // Get the modal
-var modal = document.getElementById("myModal");
+var modal = document.getElementById("addexpensemodal");
 
 // Get the button that opens the modal
-var btn = document.getElementById("myBtn");
+var btn = document.getElementById("addexpense-btn");
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
@@ -27,8 +27,8 @@ window.onclick = function (event) {
 
 
 // Get the income modal
-var inmodal = document.getElementById("myIncomeModal");
-var inbtn = document.getElementById("myBtnin");
+var inmodal = document.getElementById("addincomemodal");
+var inbtn = document.getElementById("addincome-btn");
 var inspan = document.getElementsByClassName("closein")[0];
 
 inbtn.onclick = function () {
