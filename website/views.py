@@ -18,6 +18,12 @@ def home():
         category = request.form.get('category')
         custom_category = request.form.get('custom_category')
         transaction_type = request.form.get('transaction_type')
+        payment_method = request.form.get('payment_method')
+        bank_id = request.form.get('bank')
+        selected_bank = None
+
+        if bank_id:
+            selected_bank = Bank.query.get(bank_id)
 
         if not date_str:
             flash('Date is required', category='error')
@@ -36,8 +42,9 @@ def home():
         if not category and not custom_category:
             flash('Category is required', category='error')
             return redirect(url_for('views.home'))
-
+    
         selected_category = category if category else custom_category
+        selected_bank = Bank.query.filter_by(id=request.form.get('bank')).first() if payment_method == 'bank' else None
 
         new_add = Main(
             transaction_name=transaction_name,
@@ -45,8 +52,17 @@ def home():
             transaction_type=transaction_type,
             date=date,
             category=selected_category,
-            user_id=current_user.id
+            user_id=current_user.id,
+            payment_method=payment_method,
+            bank_id=selected_bank.id if selected_bank else None
         )
+
+        if payment_method == 'bank' and bank_id:
+            selected_bank = Bank.query.get(bank_id)
+            if selected_bank:
+                selected_bank.ammout -= float(amount)
+                db.session.commit()
+
         db.session.add(new_add)
         db.session.commit()
 
@@ -59,9 +75,10 @@ def home():
     transactions = Main.query.filter_by(user_id=current_user.id).all()
     total_expenses = sum(transaction.amount for transaction in transactions if transaction.transaction_type == 'Expense')
     total_income = sum(transaction.amount for transaction in transactions if transaction.transaction_type == 'Income')
+    banks = Bank.query.filter_by(user_id=current_user.id).all()
 
 
-    return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income)
+    return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income, banks=banks)
 
 @views.route('/filter', methods=['POST'])
 @login_required

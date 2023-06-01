@@ -29,6 +29,11 @@ class Main(db.Model):
     date = db.Column(db.Date)
     category = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    payment_method = db.Column(db.String(20))
+    bank_id = db.Column(db.Integer, db.ForeignKey('bank.id'))
+
+    user_relation = db.relationship('User', backref=db.backref('transactions', lazy=True))
+    bank = db.relationship('Bank', backref=db.backref('transactions', lazy=True))
 
     @staticmethod
     def generate_transaction_id(mapper, connection, target):
@@ -55,7 +60,7 @@ event.listen(Main, 'before_insert', Main.generate_transaction_id)
 
 class Bank(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    bankname = db.Column(db.String(10000))
+    bankname = db.Column(db.String(10000), nullable=False)
     ammout = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

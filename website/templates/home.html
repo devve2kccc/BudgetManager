@@ -48,6 +48,22 @@
           <label for="custom_category">Or enter a custom category:</label>
           <input type="text" id="custom_category" name="custom_category">
         </div>
+        <div>
+          <label for="payment_method">Payment Method:</label>
+          <select id="payment_method" name="payment_method">
+            <option value="cash">Cash</option>
+            <option value="bank">Bank</option>
+          </select>
+        </div>
+        <div>
+          <label for="bank">Bank:</label>
+          <select id="bank" name="bank">
+            <option value="">Select a bank</option>
+            {% for bank in banks %}
+              <option value="{{ bank.id }}">{{ bank.bankname }}</option>
+            {% endfor %}
+          </select>
+        </div>
         <input type="hidden" name="transaction_type" value="Expense">
         <button type="submit" class="btn btn-primary">Add</button>
       </div>
