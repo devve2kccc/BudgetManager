@@ -1,0 +1,1 @@
+Quando o utilizador elimina uma transaçao, colocar o dinheiro de volta no banco!!!
