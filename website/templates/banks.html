@@ -1,37 +1,51 @@
-{% extends "base.html" %} {% block title %} Banks {% endblock %} {% block content %}
-
-<h2 align="center">Your Banks Account</h2>
-<br />
-<form action="/banks" method="POST" align="center">
-  <input type="text" name="bankName" placeholder="Bank Name" />
-  <input type="text" name="bankBalance" placeholder="Bank Balance" />
-  <input type="submit" value="Add New Bank" />
-</form>
-<br />
-<br />
-<br />
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Bank Name</th>
-      <th scope="col">Bank Balance</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for bank in user.banks %}
-    <tr>
-      <td>{{ bank.bankname }}</td>
-      <td>{{ bank.ammout }}</td>
-      <td>
-        <a href="/banks/{{ bank.id }}" class="btn btn-primary">Edit</a>
-        <form action="/banks/{{ bank.id }}" method="POST" style="display:inline-block">
-          <input type="submit" value="Delete" class="btn btn-danger" />
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+{% extends "base.html" %} 
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bank.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+{% endblock %}
+{% block title %} Banks {% endblock %} 
+{% block content %}
+<div class="container">
+  <h2 class="text-center">Your Banks Account</h2>
+  
+  <form action="/banks" method="POST" class="text-center">
+    <div class="form-group">
+      <label for="bankName">Bank Name</label>
+      <input type="text" class="form-control" name="bankName" id="bankName">
+    </div>
+    <div class="form-group">
+      <label for="bankBalance">Balance</label>
+      <input type="text" class="form-control" name="bankBalance" id="bankBalance">
+    </div>
+    <button type="submit" class="btn btn-success mt-2">Add New Bank</button>
+  </form>
+  
+  <br>
+  
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Bank Name</th>
+        <th scope="col">Bank Balance</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for bank in user.banks %}
+      <tr>
+        <td>{{ bank.bankname }}</td>
+        <td>{{ bank.ammout }}</td>
+        <td>
+          <a href="/banks/{{ bank.id }}" class="btn btn-primary">Edit</a>
+          <form action="/banks/{{ bank.id }}" method="POST" style="display:inline-block">
+            <input type="submit" value="Delete" class="btn btn-danger">
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

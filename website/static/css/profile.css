@@ -1,0 +1,24 @@
+body {
+    background-color: #282b30;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .profile-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .profile-details {
+    background-color: #1e2124;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  

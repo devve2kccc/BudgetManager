@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, request, flash, jsonify, redirect, url_for
+from flask import Blueprint, jsonify, render_template, request, flash, jsonify, redirect, url_for, make_response
 from flask_login import login_required, current_user
 from .models import Main, Bank
 from . import db
@@ -57,10 +57,15 @@ def home():
             bank_id=selected_bank.id if selected_bank else None
         )
 
-        if payment_method == 'bank' and bank_id:
+        if payment_method == 'bank' and bank_id and transaction_type == 'Expense':
             selected_bank = Bank.query.get(bank_id)
             if selected_bank:
                 selected_bank.ammout -= float(amount)
+                db.session.commit()
+        elif payment_method == 'bank' and bank_id and transaction_type == 'Income':
+            selected_bank = Bank.query.get(bank_id)
+            if selected_bank:
+                selected_bank.ammout += float(amount)
                 db.session.commit()
 
         db.session.add(new_add)
@@ -70,6 +75,7 @@ def home():
             flash('Expense created successfully!', category='success')
         elif transaction_type == 'Income':
             flash('Income added successfully!', category='success')
+    
 
     # Get all transactions for the current user (initial view)
     transactions = Main.query.filter_by(user_id=current_user.id).all()
@@ -79,6 +85,7 @@ def home():
 
 
     return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income, banks=banks)
+
 
 @views.route('/filter', methods=['POST'])
 @login_required

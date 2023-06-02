@@ -25,7 +25,6 @@ window.onclick = function (event) {
   }
 };
 
-
 // Get the income modal
 var inmodal = document.getElementById("addincomemodal");
 var inbtn = document.getElementById("addincome-btn");
@@ -44,7 +43,6 @@ window.onclick = function (event) {
     inmodal.style.display = "none";
   }
 };
-
 
 
 document.getElementById('filter-button').addEventListener('click', function() {

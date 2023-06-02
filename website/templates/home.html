@@ -96,6 +96,22 @@
           <label for="custom_category">Or enter a custom category:</label>
           <input type="text" id="custom_category" name="custom_category">
         </div>
+        <div>
+          <label for="payment_method">Payment Method:</label>
+          <select id="payment_method" name="payment_method">
+            <option value="cash">Cash</option>
+            <option value="bank">Bank</option>
+          </select>
+        </div>
+        <div>
+          <label for="bank">Bank:</label>
+          <select id="bank" name="bank">
+            <option value="">Select a bank</option>
+            {% for bank in banks %}
+              <option value="{{ bank.id }}">{{ bank.bankname }}</option>
+            {% endfor %}
+          </select>
+        </div>
         <input type="hidden" name="transaction_type" value="Income">
         <button type="submit" class="btn btn-primary">Add</button>
       </div>
@@ -119,33 +135,34 @@
   <input type="date" id="end-date" name="end-date" style="display: none;">
   <button id="filter-button" class="btn btn-primary">Filter</button>
 </div>
-<table id="data" class="table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Amount</th>
-      <th>Category</th>
-      <th>Date</th>
-      <th>Type</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for money in transactions %}
-    <tr  class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}">
-      <td>{{ money.transaction_id }}</td>
-      <td>{{ money.transaction_name }}</td>
-      <td>{{ money.amount }}</td>
-      <td>{{ money.category }}</td>
-      <td>{{ money.date }}</td>
-      <td>{{ money.transaction_type }}</td>
-      <td>
-        <button class="btn btn-danger" onclick="deleteTransaction({{ money.id }})">Delete</button>
-        <button class="btn btn-primary" onclick="editTransaction({{ money.id }})">Edit</button>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="container-table">
+  <table id="data" class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for money in transactions %}
+      <tr class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}">
+        <td>{{ money.transaction_id }}</td>
+        <td>{{ money.transaction_name }}</td>
+        <td>{{ money.amount }}</td>
+        <td>{{ money.category }}</td>
+        <td>{{ money.date }}</td>
+        <td>{{ money.transaction_type }}</td>
+        <td>
+          <button class="btn btn-danger" onclick="deleteTransaction({{ money.id }})">Delete</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

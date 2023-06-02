@@ -11,12 +11,13 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
+    cash = db.Column(db.Float)
 
     #  um urilizador pode ter muitas transações
-    mains = db.relationship('Main', backref='user')
+    mains = db.relationship('Main', back_populates='user')
 
     # um utilizador pode ter muitos bancos
-    banks = db.relationship('Bank', backref='user')
+    banks = db.relationship('Bank', back_populates='user')
 
 
 class Main(db.Model):
@@ -32,8 +33,8 @@ class Main(db.Model):
     payment_method = db.Column(db.String(20))
     bank_id = db.Column(db.Integer, db.ForeignKey('bank.id'))
 
-    user_relation = db.relationship('User', backref=db.backref('transactions', lazy=True))
-    bank = db.relationship('Bank', backref=db.backref('transactions', lazy=True))
+    user = db.relationship('User',  back_populates='mains')
+    bank = db.relationship('Bank', back_populates='mains')
 
     @staticmethod
     def generate_transaction_id(mapper, connection, target):
@@ -64,3 +65,6 @@ class Bank(db.Model):
     ammout = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    user = db.relationship('User', back_populates='banks')
+    mains = db.relationship('Main', back_populates='bank')
