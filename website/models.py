@@ -11,7 +11,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
-    cash = db.Column(db.Float)
+    cash = db.Column(db.Float, nullable=False)
 
     #  um urilizador pode ter muitas transações
     mains = db.relationship('Main', back_populates='user')

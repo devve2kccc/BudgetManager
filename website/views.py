@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, render_template, request, flash, jsonify, redirect, url_for, make_response
 from flask_login import login_required, current_user
-from .models import Main, Bank
+from .models import Main, Bank, User
 from . import db
 from sqlalchemy import extract
 from datetime import datetime, date, timedelta
@@ -67,6 +67,16 @@ def home():
             if selected_bank:
                 selected_bank.ammout += float(amount)
                 db.session.commit()
+        elif payment_method == 'cash' and transaction_type == 'Expense':
+            user = User.query.get(current_user.id)
+            if user:
+                user.cash = (user.cash or 0) - float(amount)
+                db.session.commit()
+        elif payment_method == 'cash' and transaction_type == 'Income':
+            user = User.query.get(current_user.id)
+            if user:
+                user.cash = (user.cash or 0) + float(amount)
+                db.session.commit()
 
         db.session.add(new_add)
         db.session.commit()
@@ -126,11 +136,38 @@ def delete_transaction(transaction_id):
     transaction = Main.query.get(transaction_id)
     if transaction:
         if transaction.user_id == current_user.id:
+            if transaction.transaction_type == 'Expense':
+                # Adding money back to the bank or cash
+                if transaction.payment_method == 'bank':
+                    bank = Bank.query.get(transaction.bank_id)
+                    if bank:
+                        bank.ammout += transaction.amount
+                        db.session.commit()
+                elif transaction.payment_method == 'cash':
+                    user = User.query.get(current_user.id)
+                    if user:
+                        user.cash = (user.cash or 0) + transaction.amount
+                        db.session.commit()
+
+            elif transaction.transaction_type == 'Income':
+                # Subtracting money from the bank or cash
+                if transaction.payment_method == 'bank':
+                    bank = Bank.query.get(transaction.bank_id)
+                    if bank:
+                        bank.ammout -= transaction.amount
+                        db.session.commit()
+                elif transaction.payment_method == 'cash':
+                    user = User.query.get(current_user.id)
+                    if user:
+                        user.cash = (user.cash or 0) - transaction.amount
+                        db.session.commit()
+
             db.session.delete(transaction)
             db.session.commit()
             return jsonify({"message": "Transaction deleted successfully."})
 
     return jsonify({"message": "Failed to delete the transaction."}), 400
+
 
 
 # apply here the same logic of the home route, but for banks, and make the request to database to get the values
