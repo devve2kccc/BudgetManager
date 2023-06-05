@@ -86,7 +86,7 @@ def home():
         elif transaction_type == 'Income':
             flash('Income added successfully!', category='success')
     
-
+        return redirect(url_for('views.home'))
     # Get all transactions for the current user (initial view)
     transactions = Main.query.filter_by(user_id=current_user.id).all()
     total_expenses = sum(transaction.amount for transaction in transactions if transaction.transaction_type == 'Expense')
