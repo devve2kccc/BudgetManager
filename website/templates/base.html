@@ -16,6 +16,7 @@
     integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
   {% block stylesheets %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
   {% endblock %}
@@ -23,7 +24,7 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="/">
       <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" width="150" height="50">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
@@ -94,6 +95,7 @@
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='charts.js') }}"></script>
 </body>
 
 </html>

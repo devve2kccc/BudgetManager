@@ -6,14 +6,14 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 <div class="container-box">
-<ul class="list-group" id="expense-box">
-  <li class="list-group-item active">Total Expenses</li>
-  <li class="list-group-item">{{ total_expenses }}</li>
-</ul>
-<ul class="list-group" id="income-box">
-  <li class="list-group-item active">Total Income</li>
-  <li class="list-group-item">{{ total_income }}</li>
-</ul>
+  <ul class="list-group" id="expense-box">
+    <li class="list-group-item active">Total Expenses</li>
+    <li class="list-group-item">{{ total_expenses }}</li>
+  </ul>
+  <ul class="list-group" id="income-box">
+    <li class="list-group-item active">Total Income</li>
+    <li class="list-group-item">{{ total_income }}</li>
+  </ul>
 </div>
 <div class="button-container">
   <button id="addexpense-btn" class="btn btn-primary">Add Expenses</button>
@@ -64,7 +64,7 @@
           <select id="bank" name="bank">
             <option value="">Select a bank</option>
             {% for bank in banks %}
-              <option value="{{ bank.id }}">{{ bank.bankname }}</option>
+            <option value="{{ bank.id }}">{{ bank.bankname }}</option>
             {% endfor %}
           </select>
         </div>
@@ -112,7 +112,7 @@
           <select id="bank" name="bank">
             <option value="">Select a bank</option>
             {% for bank in banks %}
-              <option value="{{ bank.id }}">{{ bank.bankname }}</option>
+            <option value="{{ bank.id }}">{{ bank.bankname }}</option>
             {% endfor %}
           </select>
         </div>
@@ -154,7 +154,8 @@
     </thead>
     <tbody>
       {% for money in transactions %}
-      <tr class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}">
+      <tr
+        class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}">
         <td>{{ money.transaction_id }}</td>
         <td>{{ money.transaction_name }}</td>
         <td>{{ money.amount }}</td>
