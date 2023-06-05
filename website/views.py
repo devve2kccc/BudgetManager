@@ -1,9 +1,9 @@
-from flask import Blueprint, jsonify, render_template, request, flash, jsonify, redirect, url_for, make_response
+from datetime import datetime, date, timedelta
+from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
+from sqlalchemy import extract
 from .models import Main, Bank, User
 from . import db
-from sqlalchemy import extract
-from datetime import datetime, date, timedelta
 
 views = Blueprint('views', __name__)
 
