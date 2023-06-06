@@ -10,6 +10,13 @@ body {
 
 .navbar {
   background-color: #333;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 999;
+  text-align: center;
 }
 
 .navbar-brand {
@@ -34,6 +41,7 @@ body {
   margin-left: 10px;
 }
 
+
 #profile {
   color: #000000;
   background-color: #ffffff;
@@ -46,8 +54,9 @@ body {
 }
 
 .container-box {
-  margin: 40px auto;
+  margin-top: 70px;
   display: flex;
+  flex-wrap: wrap;
 }
 
 #expense-box,
@@ -72,17 +81,8 @@ body {
 .button-container {
   margin-left: 20px;
   display: flex;
-  top: 10px;
-}
-
-
-.chart-container {
+  flex-wrap: wrap;
   margin-top: 40px;
-}
-
-#chart {
-  width: 600px;
-  height: 300px;
 }
 
 #addexpense-btn,

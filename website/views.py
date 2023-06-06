@@ -192,3 +192,17 @@ def banks():
             flash('Bank added', category='success')
 
     return render_template("banks.html", user=current_user)
+
+
+@views.route('/banks/<int:bank_id>', methods=['POST'])
+@login_required
+def delete_bank(bank_id):
+    bank = Bank.query.get(bank_id)
+    if bank:
+        if bank.user_id == current_user.id:
+            db.session.delete(bank)
+            db.session.commit()
+            return jsonify({"message": "Bank deleted successfully."})
+
+    return jsonify({"message": "Failed to delete the bank."}), 400
+

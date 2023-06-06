@@ -1,15 +1,15 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/bank.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
 {% endblock %}
-{% block title %} Banks {% endblock %} 
+{% block title %} Banks {% endblock %}
 {% block content %}
 <div class="container">
   <h2 class="text-center">Your Banks Account</h2>
-  
+
   <form action="/banks" method="POST" class="text-center">
     <div class="form-group">
       <label for="bankName">Bank Name</label>
@@ -21,9 +21,9 @@
     </div>
     <button type="submit" class="btn btn-success mt-2">Add New Bank</button>
   </form>
-  
+
   <br>
-  
+
   <table class="table table-striped table-hover">
     <thead>
       <tr>
@@ -38,10 +38,7 @@
         <td>{{ bank.bankname }}</td>
         <td>{{ bank.ammout }}</td>
         <td>
-          <a href="/banks/{{ bank.id }}" class="btn btn-primary">Edit</a>
-          <form action="/banks/{{ bank.id }}" method="POST" style="display:inline-block">
-            <input type="submit" value="Delete" class="btn btn-danger">
-          </form>
+          <button class="btn btn-danger" onclick="deleteBank({{ bank.id }})">Delete</button>
         </td>
       </tr>
       {% endfor %}

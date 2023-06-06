@@ -166,3 +166,24 @@ function deleteTransaction(transactionId, csrfToken) {
       console.error("Error:", error);
     });
 }
+
+function deleteBank(bankId, csrfToken) {
+  fetch(`/banks/${bankId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "Bank deleted successfully.") {
+        location.reload(); // Refresh the page after successful deletion
+      } else {
+        console.log("Failed to delete the bank.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
