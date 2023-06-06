@@ -1,3 +1,11 @@
+// Initialize the navbar functionality
+var navbarToggler = document.querySelector(".navbar-toggler");
+var navbarContent = document.querySelector("#navbarContent");
+
+navbarToggler.addEventListener("click", function () {
+  navbarContent.classList.toggle("show");
+});
+
 $(document).ready(function () {
   $(".alert .btn-close").click(function () {
     $(this).closest(".alert").alert("close");
@@ -137,7 +145,6 @@ document.getElementById("filter-button").addEventListener("click", function () {
     })
     .catch((error) => console.error(error));
 });
-
 
 function deleteTransaction(transactionId, csrfToken) {
   fetch(`/delete/${transactionId}`, {
