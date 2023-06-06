@@ -75,6 +75,16 @@ body {
   top: 10px;
 }
 
+
+.chart-container {
+  margin-top: 40px;
+}
+
+#chart {
+  width: 600px;
+  height: 300px;
+}
+
 #addexpense-btn,
 #addincome-btn {
   width: 200px;
@@ -90,7 +100,6 @@ body {
   background-color: #71ad34;
   color: #000000;
 }
-
 
 .modal {
   display: none;

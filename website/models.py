@@ -39,13 +39,14 @@ class Main(db.Model):
     @staticmethod
     def generate_transaction_id(mapper, connection, target):
         session = object_session(target)
-        max_transaction_id = session.query(func.max(Main.transaction_id)).filter_by(user_id=target.user_id).scalar()
+        max_transaction_id = session.query(func.max(Main.transaction_id)).filter_by(
+            user_id=target.user_id).scalar()
 
         if max_transaction_id is not None:
             target.transaction_id = max_transaction_id + 1
         else:
             target.transaction_id = 1
-    
+
     def serialize(self):
         return {
             'transaction_id': self.id,
@@ -56,8 +57,10 @@ class Main(db.Model):
             'transaction_type': self.transaction_type
         }
 
+
 # Associate the event listener to generate transaction ID
 event.listen(Main, 'before_insert', Main.generate_transaction_id)
+
 
 class Bank(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -42,9 +42,10 @@ def home():
         if not category and not custom_category:
             flash('Category is required', category='error')
             return redirect(url_for('views.home'))
-    
+
         selected_category = category if category else custom_category
-        selected_bank = Bank.query.filter_by(id=request.form.get('bank')).first() if payment_method == 'bank' else None
+        selected_bank = Bank.query.filter_by(id=request.form.get(
+            'bank')).first() if payment_method == 'bank' else None
 
         new_add = Main(
             transaction_name=transaction_name,
@@ -85,14 +86,15 @@ def home():
             flash('Expense created successfully!', category='success')
         elif transaction_type == 'Income':
             flash('Income added successfully!', category='success')
-    
+
         return redirect(url_for('views.home'))
     # Get all transactions for the current user (initial view)
     transactions = Main.query.filter_by(user_id=current_user.id).all()
-    total_expenses = sum(transaction.amount for transaction in transactions if transaction.transaction_type == 'Expense')
-    total_income = sum(transaction.amount for transaction in transactions if transaction.transaction_type == 'Income')
+    total_expenses = sum(
+        transaction.amount for transaction in transactions if transaction.transaction_type == 'Expense')
+    total_income = sum(
+        transaction.amount for transaction in transactions if transaction.transaction_type == 'Income')
     banks = Bank.query.filter_by(user_id=current_user.id).all()
-
 
     return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income, banks=banks)
 
@@ -109,12 +111,14 @@ def filter_transactions():
 
     if filter_type == 'month':
         # Filter by month
-        transactions = transactions.filter(extract('month', Main.date) == date.today().month)
+        transactions = transactions.filter(
+            extract('month', Main.date) == date.today().month)
     elif filter_type == 'week':
         # Filter by week
         start_of_week = date.today() - timedelta(days=date.today().weekday())
         end_of_week = start_of_week + timedelta(days=6)
-        transactions = transactions.filter(Main.date.between(start_of_week, end_of_week))
+        transactions = transactions.filter(
+            Main.date.between(start_of_week, end_of_week))
     elif filter_type == 'day':
         # Filter by day
         transactions = transactions.filter(Main.date == date.today())
@@ -122,13 +126,15 @@ def filter_transactions():
         # Filter by range of dates
         start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
         end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-        transactions = transactions.filter(Main.date.between(start_date, end_date))
+        transactions = transactions.filter(
+            Main.date.between(start_date, end_date))
 
     # Execute the query and get the filtered transactions
     filtered_transactions = transactions.all()
 
     # Return the filtered transactions as JSON response
     return jsonify(transactions=[transaction.serialize() for transaction in filtered_transactions])
+
 
 @views.route('/delete/<int:transaction_id>', methods=['POST'])
 @login_required
@@ -167,8 +173,6 @@ def delete_transaction(transaction_id):
             return jsonify({"message": "Transaction deleted successfully."})
 
     return jsonify({"message": "Failed to delete the transaction."}), 400
-
-
 
 # apply here the same logic of the home route, but for banks, and make the request to database to get the values
 @views.route('/banks', methods=['GET', 'POST'])
