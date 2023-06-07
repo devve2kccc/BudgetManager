@@ -5,20 +5,29 @@
 {% endblock %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<div class="container-box">
+<section class="container-box">
   <ul class="list-group" id="expense-box">
     <li class="list-group-item active">Total Expenses</li>
     <li class="list-group-item">{{ total_expenses }}</li>
+    <button id="addexpense-btn" class="btn btn-primary">Add Expenses</button>
   </ul>
   <ul class="list-group" id="income-box">
     <li class="list-group-item active">Total Income</li>
     <li class="list-group-item">{{ total_income }}</li>
+    <button id="addincome-btn" class="btn btn-primary">Add Income</button>
   </ul>
-</div>
-<div class="button-container">
-  <button id="addexpense-btn" class="btn btn-primary">Add Expenses</button>
-  <button id="addincome-btn" class="btn btn-primary">Add Income</button>
-</div>
+  <ul class="list-group" id="hh">
+    <li class="list-group-item active">rr</li>
+    <li class="list-group-item">{{ total_expenses }}</li>
+    <button id="addexpense-btn" class="btn btn-primary">dd</button>
+  </ul>
+  <ul class="list-group" id="jj-box">
+    <li class="list-group-item active">rr</li>
+    <li class="list-group-item">{{ total_income }}</li>
+    <button id="addincome-btn" class="btn btn-primary">dd</button>
+  </ul>
+</section>
+
 <div id="addexpensemodal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
@@ -74,6 +83,7 @@
     </form>
   </div>
 </div>
+
 <div id="addincomemodal" class="modal">
   <div class="modal-content">
     <span class="closein">&times;</span>
@@ -122,11 +132,8 @@
     </form>
   </div>
 </div>
-<br />
-<br />
-<br />
-<br />
-<div class="filter-options">
+
+<section class="filter-options">
   <label for="filter">Filter by:</label>
   <select id="filter" name="filter">
     <option value="all">All</option>
@@ -138,8 +145,9 @@
   <input type="date" id="start-date" name="start-date" style="display: none;">
   <input type="date" id="end-date" name="end-date" style="display: none;">
   <button id="filter-button" class="btn btn-primary">Filter</button>
-</div>
-<div class="container-table">
+</section>
+
+<section class="container-table">
   <table id="data" class="table">
     <thead>
       <tr>
@@ -154,8 +162,7 @@
     </thead>
     <tbody>
       {% for money in transactions %}
-      <tr
-        class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}">
+      <tr class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}">
         <td>{{ money.transaction_id }}</td>
         <td>{{ money.transaction_name }}</td>
         <td>{{ money.amount }}</td>
@@ -169,5 +176,5 @@
       {% endfor %}
     </tbody>
   </table>
-</div>
+</section>
 {% endblock %}
