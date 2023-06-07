@@ -8,6 +8,11 @@ html body {
   padding: 0;
 }
 
+.logo {
+  position: absolute;
+  left: 20px;
+  transform: translateY(-50%);
+}
 .navbar {
   background-color: #333;
   position: fixed;
@@ -16,6 +21,7 @@ html body {
   right: 0;
   width: 100%;
   z-index: 999;
+  padding: 15px 0;
   text-align: center;
 }
 
@@ -65,12 +71,21 @@ html body {
 }
 
 .container-box ul {
-  width: 300px; 
+  width: 300px;
+  height: auto;
   padding: 0 15px;
 }
 
 .container-box ul button {
+  width: auto;
+  height: auto;
   margin: 10px 0;
+}
+
+@media (max-width: 835px) {
+  .container-box {
+    flex-wrap: wrap;
+  }
 }
 
 

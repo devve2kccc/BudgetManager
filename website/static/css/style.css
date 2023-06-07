@@ -18,6 +18,10 @@ html body {
   z-index: 999;
 }
 
+.navbar .navbar-brand img {
+  padding: 0 10px;
+}
+
 .navbar-brand {
   font-size: 1.5rem;
 }
