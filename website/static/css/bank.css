@@ -6,7 +6,6 @@ html body {
   color: #ffffff;
   margin: 0;
   padding: 0;
-  height: 100%;
 }
 
 .navbar {
@@ -51,8 +50,9 @@ html body {
   border-radius: 10px;
 }
 
-.container {
-  margin: 20px auto;
+.containerbank {
+  margin: 100px auto;
+  width: 100%;
 }
 
 form {

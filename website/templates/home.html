@@ -9,28 +9,28 @@
   <ul class="list-group" id="expense-box">
     <li class="list-group-item active">Expenses</li>
     <li class="list-group-item">{{ total_expenses }}</li>
-    <button id="addexpense-btn" class="btn btn-primary">Add Expenses</button>
+    <button id="addexpense-btn" class="btn btn-default">Add Expenses</button>
   </ul>
   <ul class="list-group" id="income-box">
     <li class="list-group-item active">Income</li>
     <li class="list-group-item">{{ total_income }}</li>
-    <button id="addincome-btn" class="btn btn-primary">Add Income</button>
+    <button id="addincome-btn" class="btn btn-default">Add Income</button>
   </ul>
   <ul class="list-group" id="hh">
     <li class="list-group-item active">rr</li>
     <li class="list-group-item">{{ total_expenses }}</li>
-    <button id="addexpense-btn" class="btn btn-primary">dd</button>
+    <button id="addexpense-btn" class="btn btn-default">dd</button>
   </ul>
   <ul class="list-group" id="jj-box">
     <li class="list-group-item active">rr</li>
     <li class="list-group-item">{{ total_income }}</li>
-    <button id="addincome-btn" class="btn btn-primary">dd</button>
+    <button id="addincome-btn" class="btn btn-default">dd</button>
   </ul>
 </section>
 
 <div id="addexpensemodal" class="modal">
   <div class="modal-content">
-    <span class="close">&times;</span>
+    <span class="close close-btn">&times;</span>
     <form method="POST">
       <div class="inputDiv">
         <h5>Expense Name</h5>
@@ -86,7 +86,7 @@
 
 <div id="addincomemodal" class="modal">
   <div class="modal-content">
-    <span class="closein">&times;</span>
+    <span class="closein close-btn">&times;</span>
     <form method="POST">
       <div class="inputDiv">
         <h5>Income</h5>
@@ -142,12 +142,12 @@
     <option value="day">Day</option>
     <option value="range">Range</option>
   </select>
-  <input type="date" id="start-date" name="start-date" style="display: none;">
-  <input type="date" id="end-date" name="end-date" style="display: none;">
+  <input type="date" id="start-date" name="start-date" style="display: none;" placeholder="Start Date"> 
+  <input type="date" id="end-date" name="end-date" style="display: none;" placeholder="Start Date">
   <button id="filter-button" class="btn btn-primary">Filter</button>
 </section>
 
-<section class="container-table">
+<section class="container-table table-responsive">
   <table id="data" class="table">
     <thead>
       <tr>
