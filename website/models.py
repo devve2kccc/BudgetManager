@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     @property
     def total_money(self):
         bank_balances = sum([bank.ammout for bank in self.banks])
-        cash_balance = self.cash.balance  # Access the 'balance' attribute of the 'Cash' object
+        cash_balance = self.cash.balance if self.cash else 0.0
         total = cash_balance + bank_balances
         return total
 
@@ -41,9 +41,11 @@ class Main(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     payment_method = db.Column(db.String(20))
     bank_id = db.Column(db.Integer, db.ForeignKey('bank.id'))
+    cash_id = db.Column(db.Integer, db.ForeignKey('cash.id'))
 
     user = db.relationship('User',  back_populates='mains')
     bank = db.relationship('Bank', back_populates='mains')
+    cash = db.relationship('Cash', back_populates='mains')
 
     @staticmethod
     def generate_transaction_id(mapper, connection, target):
@@ -89,3 +91,4 @@ class Cash(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     user = db.relationship('User', back_populates='cash')
+    mains = db.relationship('Main', back_populates='cash')

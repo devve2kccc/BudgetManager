@@ -55,7 +55,8 @@ def home():
             category=selected_category,
             user_id=current_user.id,
             payment_method=payment_method,
-            bank_id=selected_bank.id if selected_bank else None
+            bank_id=selected_bank.id if selected_bank else None,
+            cash_id=cash_entry.id
         )
 
         if payment_method == 'bank' and bank_id and transaction_type == 'Expense':
@@ -70,14 +71,26 @@ def home():
                 db.session.commit()
         elif payment_method == 'cash' and transaction_type == 'Expense':
             user = User.query.get(current_user.id)
-            if user:
-                user.cash = (user.cash or 0) - float(amount)
+        if user:
+            cash_entry = Cash.query.filter_by(user_id=current_user.id).first()
+            if cash_entry:
+                cash_entry.balance -= float(amount)
+            else:
+                cash_entry = Cash(cashsource='Expense', balance=-
+                                  float(amount), user_id=current_user.id)
                 db.session.commit()
+
         elif payment_method == 'cash' and transaction_type == 'Income':
             user = User.query.get(current_user.id)
             if user:
-                user.cash = (user.cash or 0) + float(amount)
-                db.session.commit()
+                cash_entry = Cash.query.filter_by(
+                    user_id=current_user.id).first()
+                if cash_entry:
+                    cash_entry.balance += float(amount)
+                else:
+                    cash_entry = Cash(cashsource='Income', balance=float(
+                        amount), user_id=current_user.id)
+                    db.session.commit()
 
         db.session.add(new_add)
         db.session.commit()
@@ -197,6 +210,7 @@ def banks():
 
     return render_template("banks.html", user=current_user)
 
+
 @views.route('/cash', methods=['GET', 'POST'])
 @login_required
 def cash():
@@ -236,7 +250,7 @@ def chart_data():
     user_banks = Bank.query.filter_by(user_id=current_user.id).all()
     bank_names = [bank.bankname for bank in user_banks]
     bank_balances = [bank.ammout for bank in user_banks]
-    
+
     # Calculate the total balance
     total_balance = sum(bank_balances)
 
@@ -246,7 +260,8 @@ def chart_data():
         'datasets': [
             {
                 'data': bank_balances,
-                'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#3CB371', '#BA55D3', '#FF4500', '#9932CC', '#FFA500', '#00CED1']  # Customize the colors as desired
+                # Customize the colors as desired
+                'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#3CB371', '#BA55D3', '#FF4500', '#9932CC', '#FFA500', '#00CED1']
             }
         ],
         'total_balance': total_balance
@@ -254,18 +269,20 @@ def chart_data():
 
     return jsonify(chart_data)
 
+
 @views.route('/api/total-money')
 @login_required
 def total_money_data():
     user = User.query.get(current_user.id)
-    cash_total = db.session.query(func.sum(Cash.balance)).filter_by(user_id=user.id).scalar()
+    cash_total = db.session.query(
+        func.sum(Cash.balance)).filter_by(user_id=user.id).scalar()
     bank_total = sum([bank.ammout for bank in user.banks])
     total_money = user.total_money
-    
+
     data = {
         'cash': cash_total,
         'bankTotal': bank_total,
         'totalMoney': total_money
     }
-    
+
     return jsonify(data)
