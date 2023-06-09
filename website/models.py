@@ -11,13 +11,22 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
-    cash = db.Column(db.Float, nullable=False)
+
+    cash = db.relationship('Cash', uselist=False, back_populates='user')
 
     #  um urilizador pode ter muitas transações
     mains = db.relationship('Main', back_populates='user')
 
     # um utilizador pode ter muitos bancos
     banks = db.relationship('Bank', back_populates='user')
+
+    @property
+    def total_money(self):
+        bank_balances = sum([bank.ammout for bank in self.banks])
+        cash_balance = self.cash.balance  # Access the 'balance' attribute of the 'Cash' object
+        total = cash_balance + bank_balances
+        return total
+
 
 
 class Main(db.Model):
@@ -71,3 +80,12 @@ class Bank(db.Model):
 
     user = db.relationship('User', back_populates='banks')
     mains = db.relationship('Main', back_populates='bank')
+
+
+class Cash(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cashsource = db.Column(db.String(10000), nullable=False)
+    balance = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    user = db.relationship('User', back_populates='cash')

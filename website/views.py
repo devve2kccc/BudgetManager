@@ -1,8 +1,8 @@
 from datetime import datetime, date, timedelta
 from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-from sqlalchemy import extract
-from .models import Main, Bank, User
+from sqlalchemy import extract, func
+from .models import Main, Bank, User, Cash
 from . import db
 
 views = Blueprint('views', __name__)
@@ -95,8 +95,10 @@ def home():
     total_income = sum(
         transaction.amount for transaction in transactions if transaction.transaction_type == 'Income')
     banks = Bank.query.filter_by(user_id=current_user.id).all()
+    user = User.query.get(current_user.id)
+    total_money = user.total_money
 
-    return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income, banks=banks)
+    return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income, banks=banks, total_money=total_money)
 
 
 @views.route('/filter', methods=['POST'])
@@ -175,6 +177,8 @@ def delete_transaction(transaction_id):
     return jsonify({"message": "Failed to delete the transaction."}), 400
 
 # apply here the same logic of the home route, but for banks, and make the request to database to get the values
+
+
 @views.route('/banks', methods=['GET', 'POST'])
 @login_required
 def banks():
@@ -193,6 +197,24 @@ def banks():
 
     return render_template("banks.html", user=current_user)
 
+@views.route('/cash', methods=['GET', 'POST'])
+@login_required
+def cash():
+    # add bank information and balance to the database
+    if request.method == 'POST':
+        cashsource = request.form.get('cashSource')
+        balance = request.form.get('cashBalance')
+        if len(balance) < 1:
+            flash('Ammout Error', category='error')
+        else:
+            new_add = Cash(cashsource=cashsource, balance=balance,
+                           user_id=current_user.id)
+            db.session.add(new_add)
+            db.session.commit()
+            flash('Cash added', category='success')
+
+    return render_template("banks.html", user=current_user)
+
 
 @views.route('/banks/<int:bank_id>', methods=['POST'])
 @login_required
@@ -206,3 +228,44 @@ def delete_bank(bank_id):
 
     return jsonify({"message": "Failed to delete the bank."}), 400
 
+
+@views.route('/api/chart-data')
+@login_required
+def chart_data():
+    # Retrieve the banks and their balances for the current user
+    user_banks = Bank.query.filter_by(user_id=current_user.id).all()
+    bank_names = [bank.bankname for bank in user_banks]
+    bank_balances = [bank.ammout for bank in user_banks]
+    
+    # Calculate the total balance
+    total_balance = sum(bank_balances)
+
+    # Prepare the data for the chart
+    chart_data = {
+        'labels': bank_names,
+        'datasets': [
+            {
+                'data': bank_balances,
+                'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56']  # Customize the colors as desired
+            }
+        ],
+        'total_balance': total_balance
+    }
+
+    return jsonify(chart_data)
+
+@views.route('/api/total-money')
+@login_required
+def total_money_data():
+    user = User.query.get(current_user.id)
+    cash_total = db.session.query(func.sum(Cash.balance)).filter_by(user_id=user.id).scalar()
+    bank_total = sum([bank.ammout for bank in user.banks])
+    total_money = user.total_money
+    
+    data = {
+        'cash': cash_total,
+        'bankTotal': bank_total,
+        'totalMoney': total_money
+    }
+    
+    return jsonify(data)

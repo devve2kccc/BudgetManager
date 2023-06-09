@@ -9,23 +9,19 @@
   <ul class="list-group" id="expense-box">
     <li class="list-group-item active">Expenses</li>
     <li class="list-group-item">{{ total_expenses }}</li>
-    <button id="addexpense-btn" class="btn btn-default">Add Expenses</button>
+    <button id="addexpense-btn" class="btn btn-default"><i class="fa-solid fa-plus fa-beat" style="color: #ffffff;"></i></button>
   </ul>
   <ul class="list-group" id="income-box">
     <li class="list-group-item active">Income</li>
     <li class="list-group-item">{{ total_income }}</li>
-    <button id="addincome-btn" class="btn btn-default">Add Income</button>
+    <button id="addincome-btn" class="btn btn-default"><i class="fa-solid fa-plus fa-beat" style="color: #ffffff;"></i></button>
   </ul>
-  <ul class="list-group" id="hh">
-    <li class="list-group-item active">rr</li>
-    <li class="list-group-item">{{ total_expenses }}</li>
-    <button id="addexpense-btn" class="btn btn-default">dd</button>
-  </ul>
-  <ul class="list-group" id="jj-box">
-    <li class="list-group-item active">rr</li>
-    <li class="list-group-item">{{ total_income }}</li>
-    <button id="addincome-btn" class="btn btn-default">dd</button>
-  </ul>
+  <div>
+    <canvas id="totalMoneyChart"></canvas>
+  </div>
+  <div>
+    <canvas id="bankChart"></canvas>
+  </div>
 </section>
 
 <div id="addexpensemodal" class="modal">
