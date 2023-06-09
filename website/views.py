@@ -246,7 +246,7 @@ def chart_data():
         'datasets': [
             {
                 'data': bank_balances,
-                'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56']  # Customize the colors as desired
+                'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#3CB371', '#BA55D3', '#FF4500', '#9932CC', '#FFA500', '#00CED1']  # Customize the colors as desired
             }
         ],
         'total_balance': total_balance
