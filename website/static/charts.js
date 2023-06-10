@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          borderWidth: 0
         },
       });
     })
@@ -34,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Configure the chart (same as before)
         const chartOptions = {
           responsive: true,
-          maintainAspectRatio: false
+          maintainAspectRatio: false,
+          borderWidth: 0
         };
   
         // Get the chart canvas element (same as before)
