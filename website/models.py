@@ -19,7 +19,7 @@ class User(db.Model, UserMixin):
 
     # um utilizador pode ter muitos bancos
     banks = db.relationship('Bank', back_populates='user')
-
+    
     @property
     def total_money(self):
         bank_balances = sum([bank.ammout for bank in self.banks])
@@ -27,13 +27,10 @@ class User(db.Model, UserMixin):
         total = cash_balance + bank_balances
         return total
 
-
-
 class Main(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     transaction_id = db.Column(db.Integer)  # Unique transaction ID
     transaction_name = db.Column(db.String(10000))
-    # Add transaction_type column
     transaction_type = db.Column(db.String(10000))
     amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date)
@@ -43,7 +40,7 @@ class Main(db.Model):
     bank_id = db.Column(db.Integer, db.ForeignKey('bank.id'))
     cash_id = db.Column(db.Integer, db.ForeignKey('cash.id'))
 
-    user = db.relationship('User',  back_populates='mains')
+    user = db.relationship('User', back_populates='mains')
     bank = db.relationship('Bank', back_populates='mains')
     cash = db.relationship('Cash', back_populates='mains')
 
@@ -67,10 +64,9 @@ class Main(db.Model):
             'date': self.date.strftime('%Y-%m-%d'),
             'transaction_type': self.transaction_type
         }
-
-
 # Associate the event listener to generate transaction ID
 event.listen(Main, 'before_insert', Main.generate_transaction_id)
+
 
 
 class Bank(db.Model):
@@ -88,6 +84,7 @@ class Cash(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cashsource = db.Column(db.String(10000), nullable=False)
     balance = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     user = db.relationship('User', back_populates='cash')

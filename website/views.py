@@ -46,6 +46,7 @@ def home():
         selected_category = category if category else custom_category
         selected_bank = Bank.query.filter_by(id=request.form.get(
             'bank')).first() if payment_method == 'bank' else None
+        cash_id = request.form.get('cash') if payment_method == 'cash' else None
 
         new_add = Main(
             transaction_name=transaction_name,
@@ -56,7 +57,7 @@ def home():
             user_id=current_user.id,
             payment_method=payment_method,
             bank_id=selected_bank.id if selected_bank else None,
-            cash_id=cash_entry.id
+            cash_id=cash_id
         )
 
         if payment_method == 'bank' and bank_id and transaction_type == 'Expense':
@@ -69,28 +70,6 @@ def home():
             if selected_bank:
                 selected_bank.ammout += float(amount)
                 db.session.commit()
-        elif payment_method == 'cash' and transaction_type == 'Expense':
-            user = User.query.get(current_user.id)
-        if user:
-            cash_entry = Cash.query.filter_by(user_id=current_user.id).first()
-            if cash_entry:
-                cash_entry.balance -= float(amount)
-            else:
-                cash_entry = Cash(cashsource='Expense', balance=-
-                                  float(amount), user_id=current_user.id)
-                db.session.commit()
-
-        elif payment_method == 'cash' and transaction_type == 'Income':
-            user = User.query.get(current_user.id)
-            if user:
-                cash_entry = Cash.query.filter_by(
-                    user_id=current_user.id).first()
-                if cash_entry:
-                    cash_entry.balance += float(amount)
-                else:
-                    cash_entry = Cash(cashsource='Income', balance=float(
-                        amount), user_id=current_user.id)
-                    db.session.commit()
 
         db.session.add(new_add)
         db.session.commit()
@@ -110,6 +89,7 @@ def home():
     banks = Bank.query.filter_by(user_id=current_user.id).all()
     user = User.query.get(current_user.id)
     total_money = user.total_money
+    
 
     return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income, banks=banks, total_money=total_money)
 
@@ -169,6 +149,7 @@ def delete_transaction(transaction_id):
                     if user:
                         user.cash = (user.cash or 0) + transaction.amount
                         db.session.commit()
+                        user.update_cash_balance
 
             elif transaction.transaction_type == 'Income':
                 # Subtracting money from the bank or cash
@@ -182,6 +163,7 @@ def delete_transaction(transaction_id):
                     if user:
                         user.cash = (user.cash or 0) - transaction.amount
                         db.session.commit()
+                        user.update_cash_balance
 
             db.session.delete(transaction)
             db.session.commit()
