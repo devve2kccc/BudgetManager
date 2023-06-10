@@ -1,27 +1,20 @@
-{% extends "base.html" %} {% block stylesheets %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/home.css') }}"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-/>
-{% endblock %} {% block title %}Home{% endblock %} {% block content %}
+{% extends "base.html" %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+{% block title %}Home{% endblock %}
+{% block content %}
 <section class="container-box">
   <ul class="list-group" id="expense-box">
     <li class="list-group-item active">Expenses</li>
     <li class="list-group-item">{{ total_expenses }}</li>
-    <button id="addexpense-btn" class="btn btn-default">
-      <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
-    </button>
+    <button id="addexpense-btn" class="btn btn-default"><i class="fa-solid fa-plus fa-beat" style="color: #ffffff;"></i></button>
   </ul>
   <ul class="list-group" id="income-box">
     <li class="list-group-item active">Income</li>
     <li class="list-group-item">{{ total_income }}</li>
-    <button id="addincome-btn" class="btn btn-default">
-      <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
-    </button>
+    <button id="addincome-btn" class="btn btn-default"><i class="fa-solid fa-plus fa-beat" style="color: #ffffff;"></i></button>
   </ul>
   <div>
     <canvas id="totalMoneyChart"></canvas>
@@ -37,11 +30,7 @@
     <form method="POST">
       <div class="inputDiv">
         <h5>Expense Name</h5>
-        <textarea
-          name="transactionname"
-          id="transactionname"
-          class="form-control"
-        ></textarea>
+        <textarea name="transactionname" id="transactionname" class="form-control"></textarea>
         <h5>Amount</h5>
         <textarea name="amount" id="amount" class="form-control"></textarea>
         <div>
@@ -66,7 +55,7 @@
         </div>
         <div>
           <label for="custom_category">Or enter a custom category:</label>
-          <input type="text" id="custom_category" name="custom_category" />
+          <input type="text" id="custom_category" name="custom_category">
         </div>
         <div>
           <label for="payment_method">Payment Method:</label>
@@ -84,7 +73,7 @@
             {% endfor %}
           </select>
         </div>
-        <input type="hidden" name="transaction_type" value="Expense" />
+        <input type="hidden" name="transaction_type" value="Expense">
         <button type="submit" class="btn btn-primary">Add</button>
       </div>
     </form>
@@ -97,11 +86,7 @@
     <form method="POST">
       <div class="inputDiv">
         <h5>Income</h5>
-        <textarea
-          name="transactionname"
-          id="transactionname"
-          class="form-control"
-        ></textarea>
+        <textarea name="transactionname" id="transactionname" class="form-control"></textarea>
         <h5>Amount</h5>
         <textarea name="amount" id="amount" class="form-control"></textarea>
         <div>
@@ -119,7 +104,7 @@
         </div>
         <div>
           <label for="custom_category">Or enter a custom category:</label>
-          <input type="text" id="custom_category" name="custom_category" />
+          <input type="text" id="custom_category" name="custom_category">
         </div>
         <div>
           <label for="payment_method">Payment Method:</label>
@@ -137,7 +122,7 @@
             {% endfor %}
           </select>
         </div>
-        <input type="hidden" name="transaction_type" value="Income" />
+        <input type="hidden" name="transaction_type" value="Income">
         <button type="submit" class="btn btn-primary">Add</button>
       </div>
     </form>
@@ -153,20 +138,8 @@
     <option value="day">Day</option>
     <option value="range">Range</option>
   </select>
-  <input
-    type="date"
-    id="start-date"
-    name="start-date"
-    style="display: none"
-    placeholder="Start Date"
-  />
-  <input
-    type="date"
-    id="end-date"
-    name="end-date"
-    style="display: none"
-    placeholder="Start Date"
-  />
+  <input type="date" id="start-date" name="start-date" style="display: none;" placeholder="Start Date"> 
+  <input type="date" id="end-date" name="end-date" style="display: none;" placeholder="Start Date">
   <button id="filter-button" class="btn btn-primary">Filter</button>
 </section>
 
@@ -185,9 +158,7 @@
     </thead>
     <tbody>
       {% for money in transactions %}
-      <tr
-        class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}"
-      >
+      <tr class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}">
         <td>{{ money.transaction_id }}</td>
         <td>{{ money.transaction_name }}</td>
         <td>{{ money.amount }}</td>
@@ -195,12 +166,7 @@
         <td>{{ money.date }}</td>
         <td>{{ money.transaction_type }}</td>
         <td>
-          <button
-            class="btn btn-danger"
-            onclick="deleteTransaction({{ money.id }})"
-          >
-            Delete
-          </button>
+          <button class="btn btn-danger" onclick="deleteTransaction({{ money.id }})">Delete</button>
         </td>
       </tr>
       {% endfor %}

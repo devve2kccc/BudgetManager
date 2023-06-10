@@ -67,7 +67,7 @@ html body {
 }
 
 .container-box ul {
-  width: 200px;
+  width: 300px;
   height: auto;
   padding: 0 15px;
   border-radius: 10px;
@@ -96,8 +96,7 @@ html body {
 }
 
 .container-box canvas {
-  max-width: 200px;
-  width: 100%;
+  width: 200px;
 }
 
 @media (max-width: 835px) {
