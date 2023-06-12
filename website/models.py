@@ -11,25 +11,21 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
-    total_cash = db.Column(db.Float, nullable=False, default=0.0)
+
+    cash = db.relationship('Cash', uselist=False, back_populates='user')
 
     #  um urilizador pode ter muitas transações
     mains = db.relationship('Main', back_populates='user')
 
-    savings = db.relationship('Saving', back_populates='user')
-
     # um utilizador pode ter muitos bancos
     banks = db.relationship('Bank', back_populates='user')
-    cash = db.relationship('CashSources', back_populates='user')
     
     @property
     def total_money(self):
         bank_balances = sum([bank.ammout for bank in self.banks])
-        cash_balance = sum([cash.balance for cash in self.cash]) if self.cash else 0.0
+        cash_balance = self.cash.balance if self.cash else 0.0
         total = cash_balance + bank_balances
         return total
-
-
 
 class Main(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,12 +38,11 @@ class Main(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     payment_method = db.Column(db.String(20))
     bank_id = db.Column(db.Integer, db.ForeignKey('bank.id'))
-    cash_id = db.Column(db.Integer, db.ForeignKey('cash_sources.id'))
-
+    cash_id = db.Column(db.Integer, db.ForeignKey('cash.id'))
 
     user = db.relationship('User', back_populates='mains')
     bank = db.relationship('Bank', back_populates='mains')
-    cash = db.relationship('CashSources', back_populates='mains')
+    cash = db.relationship('Cash', back_populates='mains')
 
     @staticmethod
     def generate_transaction_id(mapper, connection, target):
@@ -84,22 +79,13 @@ class Bank(db.Model):
     user = db.relationship('User', back_populates='banks')
     mains = db.relationship('Main', back_populates='bank')
 
-class CashSources(db.Model):
+
+class Cash(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cashname = db.Column(db.String(10000), nullable=False)
-    balance = db.Column(db.Float, nullable=False, default=0.0)
+    cashsource = db.Column(db.String(10000), nullable=False)
+    balance = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     user = db.relationship('User', back_populates='cash')
     mains = db.relationship('Main', back_populates='cash')
-
-
-
-class Saving(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    savingname = db.Column(db.String(10000), nullable=False)
-    ammout = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    user = db.relationship('User', back_populates='savings')

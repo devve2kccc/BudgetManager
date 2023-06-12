@@ -2,7 +2,7 @@ from datetime import datetime, date, timedelta
 from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import extract, func
-from .models import Main, Bank, User, CashSources
+from .models import Main, Bank, User, Cash
 from . import db
 
 views = Blueprint('views', __name__)
@@ -20,14 +20,10 @@ def home():
         transaction_type = request.form.get('transaction_type')
         payment_method = request.form.get('payment_method')
         bank_id = request.form.get('bank')
-        cash_id = request.form.get('cash')
         selected_bank = None
 
         if bank_id:
             selected_bank = Bank.query.get(bank_id)
-        
-        if cash_id:
-            selected_cash = CashSources.query.get(cash_id)
 
         if not date_str:
             flash('Date is required', category='error')
@@ -50,9 +46,7 @@ def home():
         selected_category = category if category else custom_category
         selected_bank = Bank.query.filter_by(id=request.form.get(
             'bank')).first() if payment_method == 'bank' else None
-        
-        selected_cash = CashSources.query.filter_by(id=request.form.get(
-            'cash')).first() if payment_method == 'cash' else None
+        cash_id = request.form.get('cash') if payment_method == 'cash' else None
 
         new_add = Main(
             transaction_name=transaction_name,
@@ -63,7 +57,7 @@ def home():
             user_id=current_user.id,
             payment_method=payment_method,
             bank_id=selected_bank.id if selected_bank else None,
-            cash_id=selected_cash.id if selected_cash else None
+            cash_id=cash_id
         )
 
         if payment_method == 'bank' and bank_id and transaction_type == 'Expense':
@@ -75,16 +69,6 @@ def home():
             selected_bank = Bank.query.get(bank_id)
             if selected_bank:
                 selected_bank.ammout += float(amount)
-                db.session.commit()
-        elif payment_method == 'cash' and bank_id and transaction_type == 'Expense':
-            selected_cash = CashSources.query.get(cash_id)
-            if selected_cash:
-                selected_cash.balance -= float(amount)
-                db.session.commit()
-        elif payment_method == 'cash' and bank_id and transaction_type == 'Income':
-            selected_cash = CashSources.query.get(bank_id)
-            if selected_cash:
-                selected_cash.balance += float(amount)
                 db.session.commit()
 
         db.session.add(new_add)
@@ -103,12 +87,11 @@ def home():
     total_income = sum(
         transaction.amount for transaction in transactions if transaction.transaction_type == 'Income')
     banks = Bank.query.filter_by(user_id=current_user.id).all()
-    cash_sources = CashSources.query.filter_by(user_id=current_user.id).all()
     user = User.query.get(current_user.id)
     total_money = user.total_money
     
 
-    return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income, banks=banks, total_money=total_money, cash_sources=cash_sources)
+    return render_template("home.html", user=current_user, transactions=transactions, total_expenses=total_expenses, total_income=total_income, banks=banks, total_money=total_money)
 
 
 @views.route('/filter', methods=['POST'])
@@ -166,6 +149,7 @@ def delete_transaction(transaction_id):
                     if user:
                         user.cash = (user.cash or 0) + transaction.amount
                         db.session.commit()
+                        user.update_cash_balance
 
             elif transaction.transaction_type == 'Income':
                 # Subtracting money from the bank or cash
@@ -179,6 +163,7 @@ def delete_transaction(transaction_id):
                     if user:
                         user.cash = (user.cash or 0) - transaction.amount
                         db.session.commit()
+                        user.update_cash_balance
 
             db.session.delete(transaction)
             db.session.commit()
@@ -218,7 +203,7 @@ def cash():
         if len(balance) < 1:
             flash('Ammout Error', category='error')
         else:
-            new_add = CashSources(cashname=cashsource, balance=balance,
+            new_add = Cash(cashsource=cashsource, balance=balance,
                            user_id=current_user.id)
             db.session.add(new_add)
             db.session.commit()
@@ -257,8 +242,12 @@ def chart_data():
         'datasets': [
             {
                 'data': bank_balances,
+<<<<<<< HEAD
                 # Customize the colors as desired
                 'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56', '#8A2BE2', '#3CB371', '#BA55D3', '#FF4500', '#9932CC', '#FFA500', '#00CED1']
+=======
+                'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56']  # Customize the colors as desired
+>>>>>>> parent of 71f8776 (Design improvements, chart)
             }
         ],
         'total_balance': total_balance
@@ -272,7 +261,7 @@ def chart_data():
 def total_money_data():
     user = User.query.get(current_user.id)
     cash_total = db.session.query(
-        func.sum(CashSources.balance)).filter_by(user_id=user.id).scalar()
+        func.sum(Cash.balance)).filter_by(user_id=user.id).scalar()
     bank_total = sum([bank.ammout for bank in user.banks])
     total_money = user.total_money
 

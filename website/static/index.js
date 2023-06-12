@@ -105,41 +105,6 @@ document.getElementById("filter").addEventListener("change", function () {
   }
 });
 
-function togglePaymentMethod() {
-  var paymentMethodSelect = document.getElementById("payment_method");
-  var bankSelectDiv = document.getElementById("bank_select_div_expense");
-  var cashSelectDiv = document.getElementById("cash_select_div_expense");
-
-  if (paymentMethodSelect.value === "bank") {
-    bankSelectDiv.style.display = "block";
-    cashSelectDiv.style.display = "none";
-  } else if (paymentMethodSelect.value === "cash") {
-    bankSelectDiv.style.display = "none";
-    cashSelectDiv.style.display = "block";
-  } else {
-    bankSelectDiv.style.display = "none";
-    cashSelectDiv.style.display = "none";
-  }
-}
-
-function togglePaymentMethodIncome() {
-  var paymentMethodSelect = document.getElementById("payment_method");
-  var bankSelectDiv = document.getElementById("bank_select_div_income");
-  var cashSelectDiv = document.getElementById("cash_select_div_income");
-
-  if (paymentMethodSelect.value === "bank") {
-    bankSelectDiv.style.display = "block";
-    cashSelectDiv.style.display = "none";
-  } else if (paymentMethodSelect.value === "cash") {
-    bankSelectDiv.style.display = "none";
-    cashSelectDiv.style.display = "block";
-  } else {
-    bankSelectDiv.style.display = "none";
-    cashSelectDiv.style.display = "none";
-  }
-}
-
-
 document.getElementById("filter-button").addEventListener("click", function () {
   var filter = document.getElementById("filter").value;
   var startDate = document.getElementById("start-date").value;
