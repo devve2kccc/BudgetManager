@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block stylesheets %}
+{% extends "base.html" %} {% block stylesheets %} {{ super() }}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/home.css') }}"

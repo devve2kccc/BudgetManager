@@ -10,6 +10,9 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'devveeeeeeee'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'None'
     # iniciar database
     db.init_app(app)
 

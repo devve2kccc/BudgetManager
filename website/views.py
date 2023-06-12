@@ -76,13 +76,13 @@ def home():
             if selected_bank:
                 selected_bank.ammout += float(amount)
                 db.session.commit()
-        elif payment_method == 'cash' and bank_id and transaction_type == 'Expense':
+        elif payment_method == 'cash' and cash_id and transaction_type == 'Expense':
             selected_cash = CashSources.query.get(cash_id)
             if selected_cash:
                 selected_cash.balance -= float(amount)
                 db.session.commit()
-        elif payment_method == 'cash' and bank_id and transaction_type == 'Income':
-            selected_cash = CashSources.query.get(bank_id)
+        elif payment_method == 'cash' and cash_id and transaction_type == 'Income':
+            selected_cash = CashSources.query.get(cash_id)
             if selected_cash:
                 selected_cash.balance += float(amount)
                 db.session.commit()
@@ -162,9 +162,9 @@ def delete_transaction(transaction_id):
                         bank.ammout += transaction.amount
                         db.session.commit()
                 elif transaction.payment_method == 'cash':
-                    user = User.query.get(current_user.id)
-                    if user:
-                        user.cash = (user.cash or 0) + transaction.amount
+                    cash = CashSources.query.get(current_user.id)
+                    if cash:
+                        cash.balance = (cash.balance or 0) + transaction.amount
                         db.session.commit()
 
             elif transaction.transaction_type == 'Income':
@@ -175,9 +175,9 @@ def delete_transaction(transaction_id):
                         bank.ammout -= transaction.amount
                         db.session.commit()
                 elif transaction.payment_method == 'cash':
-                    user = User.query.get(current_user.id)
-                    if user:
-                        user.cash = (user.cash or 0) - transaction.amount
+                    cash = CashSources.query.get(current_user.id)
+                    if cash:
+                        cash.balance = (cash.balance or 0) - transaction.amount
                         db.session.commit()
 
             db.session.delete(transaction)

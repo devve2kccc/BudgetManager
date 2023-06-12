@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block stylesheets %}
+{% extends "base.html" %} {% block stylesheets %} {{ super() }}
 <link
   rel="stylesheet"
   href="{{ url_for('static', filename='css/bank.css') }}"
@@ -35,21 +35,35 @@
             placeholder="Enter Balance"
           />
         </div>
-        <button type="submit" class="btn btn-success mt-2"><i class="fa-solid fa-plus fa-beat" style="color: #ffffff;"></i></button>
+        <button type="submit" class="btn btn-success mt-2">
+          <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
+        </button>
       </form>
     </div>
     <div class="col-sm-6">
       <form action="/cash" method="POST" class="text-center">
         <div class="form-group">
-            <label for="cashSource">Cash Source</label>
-            <input type="text" class="form-control" name="cashSource" id="cashSource">
+          <label for="cashSource">Cash Source</label>
+          <input
+            type="text"
+            class="form-control"
+            name="cashSource"
+            id="cashSource"
+          />
         </div>
         <div class="form-group">
-            <label for="cashBalance">Balance</label>
-            <input type="text" class="form-control" name="cashBalance" id="cashBalance">
+          <label for="cashBalance">Balance</label>
+          <input
+            type="text"
+            class="form-control"
+            name="cashBalance"
+            id="cashBalance"
+          />
         </div>
-        <button type="submit" class="btn btn-success mt-2"><i class="fa-solid fa-plus fa-beat" style="color: #ffffff;"></i></button>
-    </form>
+        <button type="submit" class="btn btn-success mt-2">
+          <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
+        </button>
+      </form>
     </div>
   </section>
   <table class="table table-striped table-hover table-responsive">
@@ -66,7 +80,9 @@
         <td>{{ bank.bankname }}</td>
         <td>{{ bank.ammout }}</td>
         <td>
-          <button class="btn btn-danger" onclick="deleteBank({{ bank.id }})">Delete</button>
+          <button class="btn btn-danger" onclick="deleteBank({{ bank.id }})">
+            Delete
+          </button>
         </td>
       </tr>
       {% endfor %}

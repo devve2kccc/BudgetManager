@@ -28,6 +28,13 @@ class User(db.Model, UserMixin):
         cash_balance = sum([cash.balance for cash in self.cash]) if self.cash else 0.0
         total = cash_balance + bank_balances
         return total
+    
+    @staticmethod
+    def update_user_cash_balance(mapper, connection, target):
+        session = object_session(target)
+        total_cash = session.query(func.coalesce(func.sum(CashSources.balance), 0.0)).filter_by(
+            user_id=target.id).scalar()
+        target.total_cash = total_cash
 
 
 
@@ -71,6 +78,7 @@ class Main(db.Model):
         }
 # Associate the event listener to generate transaction ID
 event.listen(Main, 'before_insert', Main.generate_transaction_id)
+event.listen(User, 'before_insert', User.update_user_cash_balance)
 
 
 
