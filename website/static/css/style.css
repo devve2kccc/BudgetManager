@@ -1,4 +1,4 @@
-body {
+html body {
   background-color: #282b30;
   font-family: "Open Sans", sans-serif;
   font-size: 14px;
@@ -6,12 +6,6 @@ body {
   color: #ffffff;
   margin: 0;
   padding: 0;
-}
-
-
-.container {
-  margin: 0 auto;
-  max-width: 1200px;
 }
 
 .navbar {
@@ -58,4 +52,8 @@ body {
   background-color: red;
   border-radius: 10px;
   padding: 5px 10px;
+}
+
+.alerts {
+  margin-top: 80px;
 }

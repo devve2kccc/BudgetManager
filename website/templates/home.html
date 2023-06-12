@@ -1,31 +1,47 @@
-{% extends "base.html" %}
-{% block stylesheets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-{% endblock %}
-{% block title %}Home{% endblock %}
-{% block content %}
-<div class="container-box">
+{% extends "base.html" %} {% block stylesheets %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/home.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+/>
+{% endblock %} {% block title %}Home{% endblock %} {% block content %}
+<section class="container-box">
   <ul class="list-group" id="expense-box">
-    <li class="list-group-item active">Total Expenses</li>
+    <li class="list-group-item active">Expenses</li>
     <li class="list-group-item">{{ total_expenses }}</li>
+    <button id="addexpense-btn" class="btn btn-default">
+      <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
+    </button>
   </ul>
   <ul class="list-group" id="income-box">
-    <li class="list-group-item active">Total Income</li>
+    <li class="list-group-item active">Income</li>
     <li class="list-group-item">{{ total_income }}</li>
+    <button id="addincome-btn" class="btn btn-default">
+      <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
+    </button>
   </ul>
-</div>
-<div class="button-container">
-  <button id="addexpense-btn" class="btn btn-primary">Add Expenses</button>
-  <button id="addincome-btn" class="btn btn-primary">Add Income</button>
-</div>
+  <div>
+    <canvas id="totalMoneyChart"></canvas>
+  </div>
+  <div>
+    <canvas id="bankChart"></canvas>
+  </div>
+</section>
+
 <div id="addexpensemodal" class="modal">
   <div class="modal-content">
-    <span class="close">&times;</span>
+    <span class="close close-btn">&times;</span>
     <form method="POST">
       <div class="inputDiv">
         <h5>Expense Name</h5>
-        <textarea name="transactionname" id="transactionname" class="form-control"></textarea>
+        <textarea
+          name="transactionname"
+          id="transactionname"
+          class="form-control"
+        ></textarea>
         <h5>Amount</h5>
         <textarea name="amount" id="amount" class="form-control"></textarea>
         <div>
@@ -50,37 +66,57 @@
         </div>
         <div>
           <label for="custom_category">Or enter a custom category:</label>
-          <input type="text" id="custom_category" name="custom_category">
+          <input type="text" id="custom_category" name="custom_category" />
         </div>
         <div>
           <label for="payment_method">Payment Method:</label>
-          <select id="payment_method" name="payment_method">
+          <select
+            id="payment_method"
+            name="payment_method"
+            onchange="togglePaymentMethod()"
+          >
             <option value="cash">Cash</option>
             <option value="bank">Bank</option>
           </select>
         </div>
-        <div>
+        <div id="bank_select_div_expense" style="display: none">
           <label for="bank">Bank:</label>
-          <select id="bank" name="bank">
+          <select id="bank_expense" name="bank">
             <option value="">Select a bank</option>
             {% for bank in banks %}
             <option value="{{ bank.id }}">{{ bank.bankname }}</option>
             {% endfor %}
           </select>
         </div>
-        <input type="hidden" name="transaction_type" value="Expense">
+        <div id="cash_select_div_expense" style="display: none">
+          <label for="cash">Cash Source:</label>
+          <select id="cash_expense" name="cash">
+            <option value="">Select a cash source</option>
+            {% for cash_source in cash_sources %}
+            <option value="{{ cash_source.id }}">
+              {{ cash_source.cashname }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <input type="hidden" name="transaction_type" value="Expense" />
         <button type="submit" class="btn btn-primary">Add</button>
       </div>
     </form>
   </div>
 </div>
+
 <div id="addincomemodal" class="modal">
   <div class="modal-content">
-    <span class="closein">&times;</span>
+    <span class="closein close-btn">&times;</span>
     <form method="POST">
       <div class="inputDiv">
         <h5>Income</h5>
-        <textarea name="transactionname" id="transactionname" class="form-control"></textarea>
+        <textarea
+          name="transactionname"
+          id="transactionname"
+          class="form-control"
+        ></textarea>
         <h5>Amount</h5>
         <textarea name="amount" id="amount" class="form-control"></textarea>
         <div>
@@ -98,35 +134,47 @@
         </div>
         <div>
           <label for="custom_category">Or enter a custom category:</label>
-          <input type="text" id="custom_category" name="custom_category">
+          <input type="text" id="custom_category" name="custom_category" />
         </div>
         <div>
           <label for="payment_method">Payment Method:</label>
-          <select id="payment_method" name="payment_method">
+          <select
+            id="payment_method"
+            name="payment_method"
+            onchange="togglePaymentMethodIncome()"
+          >
             <option value="cash">Cash</option>
             <option value="bank">Bank</option>
           </select>
         </div>
-        <div>
+        <div id="bank_select_div_income" style="display: none">
           <label for="bank">Bank:</label>
-          <select id="bank" name="bank">
+          <select id="bank_income" name="bank">
             <option value="">Select a bank</option>
             {% for bank in banks %}
             <option value="{{ bank.id }}">{{ bank.bankname }}</option>
             {% endfor %}
           </select>
         </div>
-        <input type="hidden" name="transaction_type" value="Income">
+        <div id="cash_select_div_income" style="display: none">
+          <label for="cash">Cash Source:</label>
+          <select id="cash_income" name="cash">
+            <option value="">Select a cash source</option>
+            {% for cash_source in cash_sources %}
+            <option value="{{ cash_source.id }}">
+              {{ cash_source.cashname }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <input type="hidden" name="transaction_type" value="Income" />
         <button type="submit" class="btn btn-primary">Add</button>
       </div>
     </form>
   </div>
 </div>
-<br />
-<br />
-<br />
-<br />
-<div class="filter-options">
+
+<section class="filter-options">
   <label for="filter">Filter by:</label>
   <select id="filter" name="filter">
     <option value="all">All</option>
@@ -135,11 +183,24 @@
     <option value="day">Day</option>
     <option value="range">Range</option>
   </select>
-  <input type="date" id="start-date" name="start-date" style="display: none;">
-  <input type="date" id="end-date" name="end-date" style="display: none;">
+  <input
+    type="date"
+    id="start-date"
+    name="start-date"
+    style="display: none"
+    placeholder="Start Date"
+  />
+  <input
+    type="date"
+    id="end-date"
+    name="end-date"
+    style="display: none"
+    placeholder="Start Date"
+  />
   <button id="filter-button" class="btn btn-primary">Filter</button>
-</div>
-<div class="container-table">
+</section>
+
+<section class="container-table table-responsive">
   <table id="data" class="table">
     <thead>
       <tr>
@@ -155,7 +216,8 @@
     <tbody>
       {% for money in transactions %}
       <tr
-        class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}">
+        class="{% if money.transaction_type == 'Expense' %}expense{% elif money.transaction_type == 'Income' %}income{% endif %}"
+      >
         <td>{{ money.transaction_id }}</td>
         <td>{{ money.transaction_name }}</td>
         <td>{{ money.amount }}</td>
@@ -163,11 +225,16 @@
         <td>{{ money.date }}</td>
         <td>{{ money.transaction_type }}</td>
         <td>
-          <button class="btn btn-danger" onclick="deleteTransaction({{ money.id }})">Delete</button>
+          <button
+            class="btn btn-danger"
+            onclick="deleteTransaction({{ money.id }})"
+          >
+            Delete
+          </button>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-</div>
+</section>
 {% endblock %}
