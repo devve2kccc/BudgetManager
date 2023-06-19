@@ -1,17 +1,33 @@
-{% extends "base.html" %}
-{% block stylesheets %}
-{{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
-{% endblock %}
-{% block title %} My Profile {% endblock %}
-{% block content %} 
+{% extends "base.html" %} {% block stylesheets %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/profile.css') }}"
+/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap"
+  rel="stylesheet"
+/>
+{% endblock %} {% block title %} My Profile {% endblock %} {% block content %}
 <div class="profile-container">
   <div class="profile-details">
-    <h1>Name: {{user.first_name}}</h1>
-    <h2>Email: {{user.email}}</h2>
+    <h1>Name: {{ user.first_name }}</h1>
+    <h2>Email: {{ user.email }}</h2>
   </div>
 </div>
+
+<h2>Generate PDF</h2>
+
+<form action="/generate_pdf" method="POST">
+  <div>
+    <label for="start_date">Start Date:</label>
+    <input type="date" id="start_date" name="start_date" />
+  </div>
+  <div>
+    <label for="end_date">End Date:</label>
+    <input type="date" id="end_date" name="end_date" />
+  </div>
+  <button type="submit">Generate PDF</button>
+</form>
 {% endblock %}

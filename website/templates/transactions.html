@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Transaction Summary</title>
+</head>
+<body>
+  <h1>Transaction Summary</h1>
+
+  <div>
+    <h3>Total Money: {{ total_money }}</h3>
+    <h3>Total Income: {{ total_income }}</h3>
+    <h3>Total Expenses: {{ total_expenses }}</h3>
+  </div>
+
+  <h2>Transactions</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Transaction Name</th>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Date</th>
+        <th>Transaction Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for transaction in transactions %}
+        <tr>
+          <td>{{ transaction.transaction_name }}</td>
+          <td>{{ transaction.amount }}</td>
+          <td>{{ transaction.category }}</td>
+          <td>{{ transaction.date }}</td>
+          <td>{{ transaction.transaction_type }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
