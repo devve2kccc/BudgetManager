@@ -293,7 +293,6 @@ def generate_pdf():
     # Get the selected timeframe from the form
     start_date = request.form.get('start_date')
     end_date = request.form.get('end_date')
-
     # Query the database for transactions within the selected timeframe for the current user
     transactions = Main.query.filter(
         Main.user_id == current_user.id,
@@ -318,15 +317,19 @@ def generate_pdf():
         total_expenses=total_expenses,
         total_income=total_income
     )
-    # Generate PDF using pdfkit
-    pdf = pdfkit.from_string(rendered_template, False)
 
-    # Set the filename for the generated PDF
-    filename = f"report_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
+    # Define the path for the user's folder (change the path as per your project structure)
+    user_folder = os.path.join(os.getcwd(), 'pdf_reports', str(current_user.id))
 
-    # Save the PDF file locally
-    with open(filename, 'wb') as f:
-        f.write(pdf)
+    # Create the user's folder if it doesn't exist
+    os.makedirs(user_folder, exist_ok=True)
+
+    # Generate a unique filename for the PDF report
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    filename = os.path.join(user_folder, f"report_{timestamp}.pdf")
+
+    # Generate PDF using pdfkit and save it in the user's folder
+    pdfkit.from_string(rendered_template, filename)
 
     # Send the PDF file as a response for download
     return send_file(filename, as_attachment=True)
