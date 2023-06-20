@@ -1,5 +1,5 @@
 from datetime import datetime, date, timedelta
-from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for, current_app, send_file
+from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for, send_file
 from flask_login import login_required, current_user
 from sqlalchemy import extract, func
 from .models import Main, Bank, User, CashSources
@@ -286,42 +286,47 @@ def total_money_data():
 
     return jsonify(data)
 
+
 @views.route('/generate_pdf', methods=['POST'])
 @login_required
 def generate_pdf():
+    # Get the selected timeframe from the form
     start_date = request.form.get('start_date')
     end_date = request.form.get('end_date')
 
-    # Perform form validation
-    if not start_date or not end_date:
-        flash('Date is required', category='error')
+    # Query the database for transactions within the selected timeframe for the current user
+    transactions = Main.query.filter(
+        Main.user_id == current_user.id,
+        Main.date >= start_date,
+        Main.date <= end_date
+    ).all()
 
-    # Get all transactions for the current user within the specified date range
-    transactions = Main.query.filter_by(user_id=current_user.id).filter(Main.date.between(start_date, end_date)).all()
-
-    total_expenses = sum(
-        transaction.amount for transaction in transactions if transaction.transaction_type == 'Expense')
-    total_income = sum(
-        transaction.amount for transaction in transactions if transaction.transaction_type == 'Income')
+    # Calculate total money, expenses, and income for the selected timeframe
     total_money = current_user.total_money
+    total_expenses = sum(
+        transaction.amount for transaction in transactions if transaction.transaction_type == 'Expense'
+    )
+    total_income = sum(
+        transaction.amount for transaction in transactions if transaction.transaction_type == 'Income'
+    )
 
+    # Render the report template with the fetched data
     rendered_template = render_template(
-        'transactions.html',
+        'report.html',
         transactions=transactions,
         total_money=total_money,
         total_expenses=total_expenses,
         total_income=total_income
     )
-
-    os.environ['WKHTMLTOPDF_PATH'] = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-
+    # Generate PDF using pdfkit
     pdf = pdfkit.from_string(rendered_template, False)
 
+    # Set the filename for the generated PDF
+    filename = f"report_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
 
-    # Save the PDF file
-    filename = f"transactions_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
-    pdf_path = os.path.join(current_app.root_path, 'static', filename)
-    with open(pdf_path, 'wb') as f:
+    # Save the PDF file locally
+    with open(filename, 'wb') as f:
         f.write(pdf)
 
-    return send_file(pdf_path, as_attachment=True)
+    # Send the PDF file as a response for download
+    return send_file(filename, as_attachment=True)
