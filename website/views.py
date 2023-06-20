@@ -1,8 +1,8 @@
 from datetime import datetime, date, timedelta
-from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for, send_file
+from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for, send_file, abort
 from flask_login import login_required, current_user
 from sqlalchemy import extract, func
-from .models import Main, Bank, User, CashSources
+from .models import Main, Bank, User, CashSources, GeneratedReport
 from . import db
 import os
 import pdfkit
@@ -286,10 +286,17 @@ def total_money_data():
 
     return jsonify(data)
 
+@views.route('/profile', methods=['GET'])
+@login_required
+def profile():
+    generated_reports = GeneratedReport.query.filter_by(user_id=current_user.id).all()
+    return render_template('profile.html', user=current_user, generated_reports=generated_reports)
+
 
 @views.route('/generate_pdf', methods=['POST'])
 @login_required
 def generate_pdf():
+
     # Get the selected timeframe from the form
     start_date = request.form.get('start_date')
     end_date = request.form.get('end_date')
@@ -330,6 +337,24 @@ def generate_pdf():
 
     # Generate PDF using pdfkit and save it in the user's folder
     pdfkit.from_string(rendered_template, filename)
+    
+    generated_report = GeneratedReport(user_id=current_user.id, filename=filename)
+    db.session.add(generated_report)
+    db.session.commit()
 
     # Send the PDF file as a response for download
     return send_file(filename, as_attachment=True)
+
+
+@views.route('/download_report/<int:report_id>')
+@login_required
+def download_report(report_id):
+    # Query the database for the specified generated report
+    report = GeneratedReport.query.get(report_id)
+
+    if report is None or report.user_id != current_user.id:
+        # If the report doesn't exist or doesn't belong to the current user, return a 404 error
+        abort(404)
+
+    # Send the report file as a response for download
+    return send_file(report.filename, as_attachment=True)

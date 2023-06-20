@@ -111,3 +111,11 @@ class Saving(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     user = db.relationship('User', back_populates='savings')
+
+class GeneratedReport(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    filename = db.Column(db.String(100), nullable=False)
+    generated_at = db.Column(db.DateTime, nullable=False, default=func.now())
+
+    user = db.relationship('User', backref=db.backref('generated_reports', lazy=True))
