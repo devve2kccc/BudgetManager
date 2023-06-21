@@ -72,10 +72,8 @@
           <label for="payment_method">Payment Method:</label>
           <select
             id="payment_method"
-            name="payment_method"
-            onchange="togglePaymentMethod()"
-          >
-            <option value="cash">Cash</option>
+            name="payment_method">
+            <option value="cash" selected>Cash</option>
             <option value="bank">Bank</option>
           </select>
         </div>
@@ -88,7 +86,7 @@
             {% endfor %}
           </select>
         </div>
-        <div id="cash_select_div_expense" style="display: none">
+        <div id="cash_select_div_expense">
           <label for="cash">Cash Source:</label>
           <select id="cash_expense" name="cash">
             <option value="">Select a cash source</option>
@@ -140,10 +138,8 @@
           <label for="payment_method">Payment Method:</label>
           <select
             id="payment_method"
-            name="payment_method"
-            onchange="togglePaymentMethodIncome()"
-          >
-            <option value="cash">Cash</option>
+            name="payment_method">
+            <option value="cash" selected>Cash</option>
             <option value="bank">Bank</option>
           </select>
         </div>
@@ -156,7 +152,7 @@
             {% endfor %}
           </select>
         </div>
-        <div id="cash_select_div_income" style="display: none">
+        <div id="cash_select_div_income">
           <label for="cash">Cash Source:</label>
           <select id="cash_income" name="cash">
             <option value="">Select a cash source</option>

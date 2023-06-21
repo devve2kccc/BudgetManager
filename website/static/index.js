@@ -1,8 +1,8 @@
-// Initialize the navbar functionality
-var navbarToggler = document.querySelector(".navbar-toggler");
-var navbarContent = document.querySelector("#navbarContent");
+// Inicialize a funcionalidade da barra de navegação
+const navbarToggler = document.querySelector(".navbar-toggler");
+const navbarContent = document.querySelector("#navbarContent");
 
-navbarToggler.addEventListener("click", function () {
+navbarToggler.addEventListener("click", () => {
   navbarContent.classList.toggle("show");
 });
 
@@ -12,146 +12,107 @@ $(document).ready(function () {
   });
 });
 
-// Get the modal
-var modal = document.getElementById("addexpensemodal");
+// Obtenha o modal
+const addExpenseModal = document.getElementById("addexpensemodal");
+const addIncomeModal = document.getElementById("addincomemodal");
 
-// Get the button that opens the modal
-var btn = document.getElementById("addexpense-btn");
+// Obtenha o botão que abre o modal
+const addExpenseBtn = document.getElementById("addexpense-btn");
+const addIncomeBtn = document.getElementById("addincome-btn");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+// Obtenha o elemento <span> que fecha o modal
+const expenseCloseBtn = document.getElementsByClassName("close")[0];
+const incomeCloseBtn = document.getElementsByClassName("closein")[0];
 
-// When the user clicks on the button, open the modal
-btn.onclick = function () {
-  modal.style.display = "block";
+// Quando o usuário clicar no botão, abra o modal
+addExpenseBtn.onclick = () => {
+  addExpenseModal.style.display = "block";
 };
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function () {
-  modal.style.display = "none";
+addIncomeBtn.onclick = () => {
+  addIncomeModal.style.display = "block";
 };
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
+// Quando o usuário clicar no <span> (x), feche o modal
+expenseCloseBtn.onclick = () => {
+  addExpenseModal.style.display = "none";
+};
+
+incomeCloseBtn.onclick = () => {
+  addIncomeModal.style.display = "none";
+};
+
+// Quando o usuário clicar fora do modal, feche-o
+window.onclick = (event) => {
+  if (event.target == addExpenseModal) {
+    addExpenseModal.style.display = "none";
+  }
+
+  if (event.target == addIncomeModal) {
+    addIncomeModal.style.display = "none";
   }
 };
 
-// Get the income modal
-var inmodal = document.getElementById("addincomemodal");
-var inbtn = document.getElementById("addincome-btn");
-var inspan = document.getElementsByClassName("closein")[0];
+// Obtenha os campos de seleção de método de pagamento nos modais de despesa e receita
+const paymentMethodSelectExpense = addExpenseModal.querySelector("#payment_method");
+const paymentMethodSelectIncome = addIncomeModal.querySelector("#payment_method");
 
-inbtn.onclick = function () {
-  inmodal.style.display = "block";
-};
+// Adicione ouvintes de eventos aos campos de seleção de método de pagamento
+paymentMethodSelectExpense.addEventListener("change", () => {
+  const selectedPaymentMethod = paymentMethodSelectExpense.value;
+  const cashDivExpense = document.getElementById("cash_select_div_expense");
+  const bankDivExpense = document.getElementById("bank_select_div_expense");
 
-inspan.onclick = function () {
-  inmodal.style.display = "none";
-};
+  cashDivExpense.style.display = selectedPaymentMethod === "cash" ? "block" : "none";
+  bankDivExpense.style.display = selectedPaymentMethod === "bank" ? "block" : "none";
+});
 
-window.onclick = function (event) {
-  if (event.target == inmodal) {
-    inmodal.style.display = "none";
-  }
-};
+paymentMethodSelectIncome.addEventListener("change", () => {
+  const selectedPaymentMethod = paymentMethodSelectIncome.value;
+  const cashDivIncome = document.getElementById("cash_select_div_income");
+  const bankDivIncome = document.getElementById("bank_select_div_income");
 
-document.getElementById("filter").addEventListener("change", function () {
-  var filter = this.value;
-  var startDateInput = document.getElementById("start-date");
-  var endDateInput = document.getElementById("end-date");
+  cashDivIncome.style.display = selectedPaymentMethod === "cash" ? "block" : "none";
+  bankDivIncome.style.display = selectedPaymentMethod === "bank" ? "block" : "none";
+});
 
-  // Show or hide date inputs based on the selected filter
+document.getElementById("filter").addEventListener("change", () => {
+  const filter = document.getElementById("filter").value;
+  const startDateInput = document.getElementById("start-date");
+  const endDateInput = document.getElementById("end-date");
+
+  startDateInput.style.display = filter === "range" ? "block" : "none";
+  endDateInput.style.display = filter === "range" ? "block" : "none";
+
   if (filter === "range") {
-    startDateInput.style.display = "block";
-    endDateInput.style.display = "block";
-
-    // Initialize Flatpickr on the date inputs
-    flatpickr(startDateInput, {
-      // Date format and options...
-      // Date format
-      dateFormat: "Y-m-d",
-
-      // Minimum and maximum selectable dates
-      minDate: "2000-01-01",
-      maxDate: "2099-12-31",
-
-      // Appearance
-      altInput: true,
-      altFormat: "F j, Y", // Display format in the input field
-      allowInput: true,
-      clickOpens: true,
-    });
-
-    flatpickr(endDateInput, {
-      // Date format and options...
-      // Date format
-      dateFormat: "Y-m-d",
-
-      // Minimum and maximum selectable dates
-      minDate: "2000-01-01",
-      maxDate: "2099-12-31",
-
-      // Appearance
-      altInput: true,
-      altFormat: "F j, Y", // Display format in the input field
-      allowInput: true,
-      clickOpens: true,
-    });
-  } else {
-    startDateInput.style.display = "none";
-    endDateInput.style.display = "none";
+    initializeDateInput(startDateInput);
+    initializeDateInput(endDateInput);
   }
 });
 
-function togglePaymentMethod() {
-  var paymentMethodSelect = document.getElementById("payment_method");
-  var bankSelectDiv = document.getElementById("bank_select_div_expense");
-  var cashSelectDiv = document.getElementById("cash_select_div_expense");
-
-  if (paymentMethodSelect.value === "bank") {
-    bankSelectDiv.style.display = "block";
-    cashSelectDiv.style.display = "none";
-  } else if (paymentMethodSelect.value === "cash") {
-    bankSelectDiv.style.display = "none";
-    cashSelectDiv.style.display = "block";
-  } else {
-    bankSelectDiv.style.display = "none";
-    cashSelectDiv.style.display = "none";
-  }
+function initializeDateInput(dateInput) {
+  flatpickr(dateInput, {
+    dateFormat: "Y-m-d",
+    minDate: "2000-01-01",
+    maxDate: "2099-12-31",
+    altInput: true,
+    altFormat: "F j, Y",
+    allowInput: true,
+    clickOpens: true,
+  });
 }
 
-function togglePaymentMethodIncome() {
-  var paymentMethodSelect = document.getElementById("payment_method");
-  var bankSelectDiv = document.getElementById("bank_select_div_income");
-  var cashSelectDiv = document.getElementById("cash_select_div_income");
+document.getElementById("filter-button").addEventListener("click", () => {
+  const filter = document.getElementById("filter").value;
+  const startDate = document.getElementById("start-date").value;
+  const endDate = document.getElementById("end-date").value;
 
-  if (paymentMethodSelect.value === "bank") {
-    bankSelectDiv.style.display = "block";
-    cashSelectDiv.style.display = "none";
-  } else if (paymentMethodSelect.value === "cash") {
-    bankSelectDiv.style.display = "none";
-    cashSelectDiv.style.display = "block";
-  } else {
-    bankSelectDiv.style.display = "none";
-    cashSelectDiv.style.display = "none";
-  }
-}
-
-
-document.getElementById("filter-button").addEventListener("click", function () {
-  var filter = document.getElementById("filter").value;
-  var startDate = document.getElementById("start-date").value;
-  var endDate = document.getElementById("end-date").value;
-
-  var data = { filter: filter };
+  const data = { filter };
   if (filter === "range") {
     data.start_date = startDate;
     data.end_date = endDate;
   }
 
-  // Make an AJAX request to fetch filtered data
   fetch("/filter", {
     method: "POST",
     body: JSON.stringify(data),
@@ -161,20 +122,19 @@ document.getElementById("filter-button").addEventListener("click", function () {
   })
     .then((response) => response.json())
     .then((data) => {
-      // Update the table with filtered data
-      var tableBody = document.getElementById("data").querySelector("tbody");
+      const tableBody = document.getElementById("data").querySelector("tbody");
       tableBody.innerHTML = "";
 
       data.transactions.forEach((money) => {
-        var row = document.createElement("tr");
+        const row = document.createElement("tr");
         row.innerHTML = `
-        <td>${money.transaction_id}</td>
-        <td>${money.transaction_name}</td>
-        <td>${money.amount}</td>
-        <td>${money.category}</td>
-        <td>${money.date}</td>
-        <td>${money.transaction_type}</td>
-      `;
+          <td>${money.transaction_id}</td>
+          <td>${money.transaction_name}</td>
+          <td>${money.amount}</td>
+          <td>${money.category}</td>
+          <td>${money.date}</td>
+          <td>${money.transaction_type}</td>
+        `;
         tableBody.appendChild(row);
       });
     })
@@ -192,7 +152,7 @@ function deleteTransaction(transactionId, csrfToken) {
     .then((response) => response.json())
     .then((data) => {
       if (data.message === "Transaction deleted successfully.") {
-        location.reload(); // Refresh the page after successful deletion
+        location.reload();
       } else {
         console.log("Failed to delete the transaction.");
       }
@@ -213,7 +173,7 @@ function deleteBank(bankId, csrfToken) {
     .then((response) => response.json())
     .then((data) => {
       if (data.message === "Bank deleted successfully.") {
-        location.reload(); // Refresh the page after successful deletion
+        location.reload();
       } else {
         console.log("Failed to delete the bank.");
       }

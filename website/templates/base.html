@@ -21,10 +21,6 @@
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-    />
-    <link
-      rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css')}}"
     />
     {% block stylesheets %}{{ style_css|default(include_style_css) }}{% endblock %}
