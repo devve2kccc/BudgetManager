@@ -19,12 +19,13 @@
 
 <main class="report-table">
   <h2>Generated Reports</h2>
-  <table>
+  <div class="table-responsive">
+  <table class="table table-light align-middle">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Created at</th>
-        <th>Download</th>
+        <th scope="col">Name</th>
+        <th scope="col">Created at</th>
+        <th scope="col">Download</th>
       </tr>
     </thead>
     <tbody>
@@ -36,13 +37,14 @@
           <a
             href="{{ url_for('views.download_report', report_id=report.id) }}"
             class="download-link"
-            >Download</a
+            ><i class="fa-solid fa-download fa-beat-fade fa-lg"></i></a
           >
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+</div>
 </main>
 
 <aside class="generate-form">
@@ -60,7 +62,7 @@
         max="{{ current_date }}"
       />
     </div>
-    <button type="submit" class="generate-pdf-btn">Generate PDF</button>
+    <button type="submit" class="generate-pdf-btn btn btn-info">Generate PDF</button>
   </form>
 </aside>
 {% endblock %}
