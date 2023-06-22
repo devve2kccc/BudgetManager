@@ -289,14 +289,20 @@ def total_money_data():
 @views.route('/profile', methods=['GET'])
 @login_required
 def profile():
+        # Fetch the oldest and latest transaction dates
+    oldest_transaction = Main.query.filter_by(user_id=current_user.id).order_by(Main.date.asc()).first()
+    latest_transaction = Main.query.filter_by(user_id=current_user.id).order_by(Main.date.desc()).first()
+
+    # Convert the dates to the expected format (YYYY-MM-DD)
+    min_date = oldest_transaction.date.strftime('%Y-%m-%d') if oldest_transaction else ''
+    max_date = latest_transaction.date.strftime('%Y-%m-%d') if latest_transaction else ''
     generated_reports = GeneratedReport.query.filter_by(user_id=current_user.id).all()
-    return render_template('profile.html', user=current_user, generated_reports=generated_reports)
+    return render_template('profile.html', user=current_user, generated_reports=generated_reports, min_date=min_date, max_date=max_date)
 
 
 @views.route('/generate_pdf', methods=['POST'])
 @login_required
 def generate_pdf():
-
     # Get the selected timeframe from the form
     start_date = request.form.get('start_date')
     end_date = request.form.get('end_date')
