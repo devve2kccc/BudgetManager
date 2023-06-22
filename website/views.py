@@ -2,7 +2,7 @@ from datetime import datetime, date, timedelta
 from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for, send_file, abort
 from flask_login import login_required, current_user
 from sqlalchemy import extract, func
-from .models import Main, Bank, User, CashSources, GeneratedReport
+from .models import Main, Bank, User, CashSources, GeneratedReport, Saving
 from . import db
 import os
 import pdfkit
@@ -241,6 +241,36 @@ def delete_bank(bank_id):
 
     return jsonify({"message": "Failed to delete the bank."}), 400
 
+@views.route('/addsafe', methods=['GET', 'POST'])
+@login_required
+def addsafe():
+    # add bank information and balance to the database
+    if request.method == 'POST':
+        safename = request.form.get('safeName')
+        balance = request.form.get('safeBalance')
+        if len(balance) < 1:
+            flash('Balance Error', category='error')
+        else:
+            new_add = Saving(safename=safename, balance=balance,
+                           user_id=current_user.id)
+            db.session.add(new_add)
+            db.session.commit()
+            flash('Safe added', category='success')
+        return redirect(url_for('views.addsafe')) 
+
+    return render_template("savings.html", user=current_user)
+
+@views.route('/savings/<int:bank_id>', methods=['POST'])
+@login_required
+def delete_safe(safe_id):
+    safe = Saving.query.get(safe_id)
+    if safe:
+        if safe.user_id == current_user.id:
+            db.session.delete(safe)
+            db.session.commit()
+            return jsonify({"message": "Safe deleted successfully."})
+
+    return jsonify({"message": "Failed to delete the Safe."}), 400
 
 @views.route('/api/chart-data')
 @login_required

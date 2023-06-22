@@ -31,10 +31,10 @@ def login():
 def crypto():
     return render_template('crypto.html', user= current_user)
 
-@auth.route('/stocks')
+@auth.route('/savings')
 @login_required
-def stocks():
-    return render_template('stocks.html', user= current_user)
+def savings():
+    return render_template('savings.html', user= current_user)
 
 @auth.route('/banks')
 @login_required

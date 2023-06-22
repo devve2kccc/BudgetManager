@@ -182,3 +182,25 @@ function deleteBank(bankId, csrfToken) {
       console.error("Error:", error);
     });
 }
+
+function deleteSafe(safeId, csrfToken) {
+  fetch(`/banks/${safeId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "Safe deleted successfully.") {
+        location.reload();
+      } else {
+        console.log("Failed to delete the Safe.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+

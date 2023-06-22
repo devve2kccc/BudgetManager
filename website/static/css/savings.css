@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+
+.container h2 {
+    font-family: 'Raleway', sans-serif;
+}
+
+section {
+    background-color: #1e2124;
+    padding: 50px 10px;
+    border-radius: 25px;
+    width: 80%;
+    margin: auto auto;
+    margin-bottom: 25px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+section .form-safe {
+    width: 50%;
+}
