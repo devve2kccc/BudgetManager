@@ -260,7 +260,7 @@ def addsafe():
 
     return render_template("savings.html", user=current_user)
 
-@views.route('/savings/<int:bank_id>', methods=['POST'])
+@views.route('/savings/<int:safe_id>', methods=['POST'])
 @login_required
 def delete_safe(safe_id):
     safe = Saving.query.get(safe_id)
@@ -271,6 +271,21 @@ def delete_safe(safe_id):
             return jsonify({"message": "Safe deleted successfully."})
 
     return jsonify({"message": "Failed to delete the Safe."}), 400
+
+@views.route('/savings/<int:safe_id>', methods=['POST'])
+@login_required
+def update_safe(safe_id):
+    safe = Saving.query.get(safe_id)
+    if safe:
+        if safe.user_id == current_user.id:
+            new_balance = request.json.get('balance')
+            if new_balance is not None:
+                safe.balance = new_balance
+                db.session.commit()
+                return jsonify({"message": "Safe updated successfully."})
+
+    return jsonify({"message": "Failed to update the Safe."}), 400
+
 
 @views.route('/api/chart-data')
 @login_required

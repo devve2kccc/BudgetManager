@@ -183,8 +183,11 @@ function deleteBank(bankId, csrfToken) {
     });
 }
 
-function deleteSafe(safeId, csrfToken) {
-  fetch(`/banks/${safeId}`, {
+function deleteSafe(safeId) {
+  // Retrieve the CSRF token from the HTML meta tag
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  fetch(`/savings/${safeId}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
