@@ -26,7 +26,7 @@
       </form>
     </div>
   </section>
-  <table class="table table-striped table-hover table-responsive">
+  <table class="table bg-white table-hover table-responsive">
     <thead>
       <tr>
         <th scope="col">Safe Name</th>
@@ -40,7 +40,7 @@
         <td>{{ safe.safename }}</td>
         <td>{{ safe.balance }}</td>
         <td>
-          <button class="btn btn-info" onclick="editSafe({{ safe.id }})">
+          <button class="btn btn-info" id="updatesafe">
             Edit
           </button>
           <button class="btn btn-danger" onclick="deleteSafe({{ safe.id }})">
@@ -51,18 +51,4 @@
       {% endfor %}
     </tbody>
   </table>
-  <div id="editModal" class="modal">
-    <div class="modal-content">
-      <span class="closesafeedit">&times;</span>
-      <h3>Edit Safe</h3>
-      <form id="editForm">
-        <div class="form-group">
-          <label for="newBalanceInput">New Balance</label>
-          <input type="text" class="form-control" id="newBalanceInput" placeholder="Enter New Balance" />
-        </div>
-        <button type="submit" class="btn btn-primary">Save</button>
-      </form>
-    </div>
-  </div>
-</div>
 {% endblock %}
