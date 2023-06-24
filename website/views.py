@@ -15,7 +15,7 @@ views = Blueprint('views', __name__)
 def home():
     if request.method == 'POST':
         transaction_name = request.form.get('transactionname')
-        amount = request.form.get('amount')
+        amount = request.form.get('currency-field')
         date_str = request.form.get('date')
         category = request.form.get('category')
         custom_category = request.form.get('custom_category')
@@ -43,6 +43,15 @@ def home():
 
         if not amount:
             flash('Amount is required', category='error')
+            return redirect(url_for('views.home'))
+        
+        amount = amount.replace('$', '').replace(',', '')
+
+        
+        try:
+            amount = float(amount)
+        except ValueError:
+            flash('Invalid amount format', category='error')
             return redirect(url_for('views.home'))
 
         if not category and not custom_category:
