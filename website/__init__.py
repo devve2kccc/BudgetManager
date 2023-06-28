@@ -10,6 +10,9 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'devveeeeeeee'
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'None'
     # iniciar database
     db.init_app(app)
 
@@ -19,7 +22,7 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
-    from .models import User, Main
+    from .models import Main, User
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -28,10 +31,9 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
-    
+
     with app.app_context():
         db.create_all()
 
     return app
-
 

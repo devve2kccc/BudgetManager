@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, make_response
 import flask
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -31,10 +31,10 @@ def login():
 def crypto():
     return render_template('crypto.html', user= current_user)
 
-@auth.route('/stocks')
+@auth.route('/savings')
 @login_required
-def stocks():
-    return render_template('stocks.html', user= current_user)
+def savings():
+    return render_template('savings.html', user= current_user)
 
 @auth.route('/banks')
 @login_required
@@ -80,6 +80,7 @@ def sign_up():
             login_user(new_user, remember=True) 
             flash('Account Created!', category='success')           
             return redirect(url_for('views.home'))
+        
     
     return render_template("sign_up.html", user=current_user)
 
