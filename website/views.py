@@ -1,6 +1,7 @@
 from datetime import datetime, date, timedelta
 from flask import Blueprint, jsonify, render_template, request, flash, redirect, url_for, send_file, abort
 from flask_login import login_required, current_user
+import requests
 from sqlalchemy import extract, func
 from .models import Main, Bank, User, CashSources, GeneratedReport, Saving
 from . import db
@@ -419,3 +420,13 @@ def download_report(report_id):
 
     # Send the report file as a response for download
     return send_file(report.filename, as_attachment=True)
+
+
+@views.route('/api/cryptos')
+def get_cryptos():
+    api_url = 'https://api.coinmarketcap.com/v2/ticker/?limit=100'
+
+    response = requests.get(api_url)
+    data = response.json()
+
+    return data

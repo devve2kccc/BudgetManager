@@ -4,3 +4,22 @@
   left: 0;
   z-index: 9999;
 }
+
+section {
+  background-color: #1e2124;
+  padding: 50px 10px;
+  border-radius: 25px;
+  width: 80%;
+  margin: auto auto;
+  margin-bottom: 25px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+section .form-crypto {
+  width: 50%;
+}
+

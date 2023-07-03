@@ -19,4 +19,58 @@
   type="text/javascript"
   src="https://files.coinmarketcap.com/static/widget/coinMarquee.js"
 ></script>
+
+<div class="container">
+  <h2 class="text-center">Your Savings</h2>
+  <section class="add-safe-container">
+    <div class="form-crypto">
+      <form action="/addcrypto" method="POST" class="text-center" onsubmit="searchCrypto(event)">
+        <div class="form-group">
+          <label for="cryptoName">Cryptocurrency Name</label>
+          <input type="text" class="form-control" name="cryptoName" id="cryptoName" placeholder="Enter Cryptocurrency Name" oninput="handleCryptoInput()" />
+          <ul id="cryptoList" class="crypto-list"></ul>
+        </div>
+        <input type="hidden" name="cryptoId" id="cryptoId" />
+        <input type="hidden" name="cryptoSymbol" id="cryptoSymbol" />
+        <div class="form-group">
+          <label for="cryptoBalance">Balance</label>
+          <input type="text" class="form-control" name="cryptoBalance" id="cryptoBalance" placeholder="Enter Balance" />
+        </div>
+        <button type="submit" class="btn btn-success mt-2">
+          <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
+        </button>
+      </form>
+    </div>
+  </section>
+  <table class="table bg-white table-hover table-responsive">
+    <thead>
+      <tr>
+        <th scope="col">Safe Name</th>
+        <th scope="col">Safe Balance</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for safe in user.savings %}
+      <tr>
+        <td>{{ safe.safename }}</td>
+        <td>{{ safe.balance }}</td>
+        <td>
+          <button class="btn btn-info" id="updatesafe">
+            Edit
+          </button>
+          <button class="btn btn-danger" onclick="deleteSafe({{ safe.id }})">
+            Delete
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script
+      type="text/javascript"
+      src="{{ url_for('static', filename='api.js') }}"
+    ></script>
 {% endblock %}
