@@ -24,11 +24,13 @@
   <h2 class="text-center">Your Savings</h2>
   <section class="add-safe-container">
     <div class="form-crypto">
-      <form action="/addcrypto" method="POST" class="text-center" onsubmit="searchCrypto(event)">
+      <form action="/addcrypto" method="POST" class="text-center">
         <div class="form-group">
           <label for="cryptoName">Cryptocurrency Name</label>
-          <input type="text" class="form-control" name="cryptoName" id="cryptoName" placeholder="Enter Cryptocurrency Name" oninput="handleCryptoInput()" />
-          <ul id="cryptoList" class="crypto-list"></ul>
+          <div class="dropdown">
+            <input type="text" class="form-control" name="cryptoName" id="cryptoName" placeholder="Enter Cryptocurrency Name" data-toggle="dropdown" />
+            <div id="cryptoDropdown" class="dropdown-menu"></div>
+          </div>
         </div>
         <input type="hidden" name="cryptoId" id="cryptoId" />
         <input type="hidden" name="cryptoSymbol" id="cryptoSymbol" />
@@ -42,6 +44,7 @@
       </form>
     </div>
   </section>
+   
   <table class="table bg-white table-hover table-responsive">
     <thead>
       <tr>

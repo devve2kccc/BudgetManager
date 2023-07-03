@@ -7,6 +7,7 @@ from .models import Main, Bank, User, CashSources, GeneratedReport, Saving
 from . import db
 import os
 import pdfkit
+import json
 
 views = Blueprint('views', __name__)
 
@@ -422,11 +423,22 @@ def download_report(report_id):
     return send_file(report.filename, as_attachment=True)
 
 
-@views.route('/api/cryptos')
+@views.route('/api/cryptos', methods=['GET'])
 def get_cryptos():
-    api_url = 'https://api.coinmarketcap.com/v2/ticker/?limit=100'
+    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+    parameters = {
+        'start': '1',
+        'limit': '5000',
+        'convert': 'USD'
+    }
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': 'd2d0d2d8-2f25-453e-a4e1-b78a89783a76'  # Replace with your own API key
+    }
 
-    response = requests.get(api_url)
-    data = response.json()
-
-    return data
+    try:
+        response = requests.get(url, params=parameters, headers=headers)
+        data = json.loads(response.text)
+        return jsonify(data)
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)})
