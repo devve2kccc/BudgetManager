@@ -31,10 +31,13 @@
 
 #expense-box li.list-group-item.active {
   background-color: #ff5a4b;
+  border-color: #ff5a4b;
 }
 
 #income-box li.list-group-item.active {
   background-color: #7bf393;
+  border-color: #7bf393;
+
 }
 
 #addexpense-btn {
