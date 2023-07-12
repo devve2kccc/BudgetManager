@@ -1,10 +1,6 @@
 from website import create_app
 
-# Content of main.py
-
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-# Path: website/__init__.py
+    app.run(debug=True, host='0.0.0.0')
