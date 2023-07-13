@@ -124,8 +124,8 @@ class GeneratedReport(db.Model):
 
 class Crypto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cryptoname = db.Column(db.String(10000), nullable=False)
-    amout = db.Column(db.Float, nullable=False)
+    crypto_name = db.Column(db.String(10000), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

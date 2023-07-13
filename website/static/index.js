@@ -282,3 +282,24 @@ function deleteSafe(safeId, csrfToken) {
     });
 }
 
+function deleteCrypto(cryptoId, csrfToken) {
+  fetch(`/crypto/${cryptoId}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.message === "Crypto deleted successfully.") {
+        location.reload();
+      } else {
+        console.log("Failed to delete the bank.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+

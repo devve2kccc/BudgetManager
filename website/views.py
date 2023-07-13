@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, render_template, request, flash, redirect,
 from flask_login import login_required, current_user
 import requests
 from sqlalchemy import extract, func
-from .models import Main, Bank, User, CashSources, GeneratedReport, Saving
+from .models import Main, Bank, User, CashSources, GeneratedReport, Saving, Crypto
 from . import db
 import os
 import pdfkit
@@ -442,3 +442,62 @@ def get_cryptos():
         return jsonify(data)
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)})
+
+    
+
+@views.route('/addcrypto', methods=['POST'])
+@login_required
+def addcrypto():
+    # add bank information and balance to the database
+    if request.method == 'POST':
+        cryptoname = request.form.get('cryptoName')
+        amount = request.form.get('cryptoBalance')
+        if len(amount) < 0:
+            flash('Balance Error', category='error')
+        else:
+            new_add = Crypto(crypto_name=cryptoname, amount=amount,
+                           user_id=current_user.id)
+            db.session.add(new_add)
+            db.session.commit()
+            flash('Crypto added', category='success')
+
+    return render_template("crypto.html", user=current_user)
+
+@views.route('/update_crypto/<int:crypto_id>', methods=['POST'])
+def update_crypto(crypto_id):
+    crypto = Crypto.query.get(crypto_id)
+
+    if crypto is None:
+        # Handle the case where the cryptocurrency with the given ID does not exist
+        return jsonify({'error': 'Cryptocurrency not found'})
+
+    updated_amount_str = request.form.get('add-crypto-amount')
+
+    if updated_amount_str is not None and updated_amount_str.strip() != '':
+        try:
+            updated_amount = float(updated_amount_str)
+        except ValueError:
+            # Handle the case where the updated amount cannot be converted to a float
+            return jsonify({'error': 'Invalid amount'})
+
+        crypto.amount = updated_amount
+        db.session.commit()
+
+        # Additional code for handling success/failure and redirecting
+
+        return redirect(url_for('views.addcrypto'))
+    else:
+        # Handle the case where the updated amount is missing or empty
+        return jsonify({'error': 'Updated amount is required'})
+    
+@views.route('/crypto/<int:crypto_id>', methods=['POST'])
+@login_required
+def delete_crypto(crypto_id):
+    crypto = Crypto.query.get(crypto_id)
+    if crypto:
+        if crypto.user_id == current_user.id:
+            db.session.delete(crypto)
+            db.session.commit()
+            return jsonify({"message": "Bank deleted successfully."})
+
+    return jsonify({"message": "Failed to delete the bank."}), 400

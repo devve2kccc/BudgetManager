@@ -22,21 +22,49 @@
 
 <div class="container">
   <h2 class="text-center">Your Savings</h2>
-  <section class="add-safe-container">
+  <section class="add-crypto-container">
     <div class="form-crypto">
       <form action="/addcrypto" method="POST" class="text-center">
         <div class="form-group">
-          <label for="cryptoName">Cryptocurrency Name</label>
+          <label for="cryptoInput">Cryptocurrency Name</label>
           <div class="dropdown">
-            <input type="text" class="form-control" name="cryptoName" id="cryptoName" placeholder="Enter Cryptocurrency Name" data-toggle="dropdown" />
-            <div id="cryptoDropdown" class="dropdown-menu"></div>
+            <input
+              type="text"
+              class="form-control"
+              name="cryptoName"
+              id="cryptoInput"
+              placeholder="Enter Cryptocurrency Name"
+              data-toggle="dropdown"
+            />
+            <div
+              id="cryptoDropdown"
+              class="dropdown-menu"
+              aria-labelledby="cryptoInput"
+            ></div>
           </div>
         </div>
         <input type="hidden" name="cryptoId" id="cryptoId" />
         <input type="hidden" name="cryptoSymbol" id="cryptoSymbol" />
         <div class="form-group">
+          <label for="cryptoPrice">Cryptocurrency Price</label>
+          <input
+            type="text"
+            class="form-control"
+            name="cryptoPrice"
+            id="cryptoPrice"
+            placeholder="Cryptocurrency Price"
+            readonly
+          />
+        </div>
+        <div class="form-group">
           <label for="cryptoBalance">Balance</label>
-          <input type="text" class="form-control" name="cryptoBalance" id="cryptoBalance" placeholder="Enter Balance" />
+          <input
+            type="text"
+            class="form-control"
+            name="cryptoBalance"
+            id="cryptoBalance"
+            placeholder="Enter Balance"
+          />
         </div>
         <button type="submit" class="btn btn-success mt-2">
           <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
@@ -44,25 +72,72 @@
       </form>
     </div>
   </section>
-   
+
   <table class="table bg-white table-hover table-responsive">
     <thead>
       <tr>
-        <th scope="col">Safe Name</th>
-        <th scope="col">Safe Balance</th>
+        <th scope="col">Crypto Name</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Price</th>
+        <th scope="col">Holding</th>
         <th scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
-      {% for safe in user.savings %}
+      {% for crypto in user.cryptos %}
       <tr>
-        <td>{{ safe.safename }}</td>
-        <td>{{ safe.balance }}</td>
+        <td>{{ crypto.crypto_name }}</td>
+        <td>{{ crypto.amount }}</td>
+        <td>{{ crypto.amount }}</td>
+        <td>{{ crypto.amount }}</td>
         <td>
-          <button class="btn btn-info" id="updatesafe">
-            Edit
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#add-crypto-modal"
+          >
+            Add
           </button>
-          <button class="btn btn-danger" onclick="deleteSafe({{ safe.id }})">
+          <div class="modal" tabindex="-1" id="add-crypto-modal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <form action="/update_crypto/{{ crypto.id }}" method="POST">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body text-center">
+                    <label for="add-crypto-amount">Total Crypto Holding</label>
+                    <input
+                      type="number"
+                      name="add-crypto-amount"
+                      id="add-crypto-amount"
+                    />
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="submit" class="btn btn-info">Add</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <button
+            class="btn btn-danger"
+            onclick="deleteCrypto({{ crypto.id }})"
+          >
             Delete
           </button>
         </td>
@@ -73,7 +148,7 @@
 </div>
 
 <script
-      type="text/javascript"
-      src="{{ url_for('static', filename='api.js') }}"
-    ></script>
+  type="text/javascript"
+  src="{{ url_for('static', filename='api.js') }}"
+></script>
 {% endblock %}
