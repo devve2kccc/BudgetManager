@@ -445,7 +445,7 @@ def get_cryptos():
 
     
 
-@views.route('/addcrypto', methods=['POST'])
+@views.route('/addcrypto', methods=['GET', 'POST'])
 @login_required
 def addcrypto():
     # add bank information and balance to the database
@@ -460,6 +460,7 @@ def addcrypto():
             db.session.add(new_add)
             db.session.commit()
             flash('Crypto added', category='success')
+        return redirect(url_for('views.addcrypto')) 
 
     return render_template("crypto.html", user=current_user)
 
