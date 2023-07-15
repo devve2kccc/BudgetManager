@@ -240,66 +240,73 @@ function deleteTransaction(transactionId, csrfToken) {
 }
 
 function deleteBank(bankId, csrfToken) {
-  fetch(`/banks/${bankId}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.message === "Bank deleted successfully.") {
-        location.reload();
-      } else {
-        console.log("Failed to delete the bank.");
-      }
+  if (confirm("Are you sure you want to delete this bank?")) {
+    fetch(`/banks/${bankId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
     })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Bank deleted successfully.") {
+          location.reload();
+        } else {
+          console.log("Failed to delete the bank.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 }
 
 function deleteSafe(safeId, csrfToken) {
-  // Retrieve the CSRF token from the HTML meta tag
-  fetch(`/savings/${safeId}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.message === "Safe deleted successfully.") {
-        location.reload();
-      } else {
-        console.log("Failed to delete the Safe.");
-      }
+  if (confirm("Are you sure you want to delete this Safe?")) {
+    // Retrieve the CSRF token from the HTML meta tag
+    fetch(`/savings/${safeId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
     })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Safe deleted successfully.") {
+          location.reload();
+        } else {
+          console.log("Failed to delete the Safe.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 }
 
 function deleteCrypto(cryptoId, csrfToken) {
-  fetch(`/crypto/${cryptoId}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": csrfToken,
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.message === "Crypto deleted successfully.") {
-        location.reload();
-      } else {
-        console.log("Failed to delete the bank.");
-      }
+  // Show confirmation dialog
+  if (confirm("Are you sure you want to delete this crypto?")) {
+    // Retrieve the CSRF token from the HTML meta tag
+    fetch(`/crypto/${cryptoId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
     })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Crypto deleted successfully.") {
+          location.reload();
+        } else {
+          console.log("Failed to delete the Crypto.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 }
-

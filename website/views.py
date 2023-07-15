@@ -217,6 +217,7 @@ def banks():
             db.session.add(new_add)
             db.session.commit()
             flash('Bank added', category='success')
+        redirect(url_for('views.banks'))
 
     return render_template("banks.html", user=current_user)
 
@@ -236,6 +237,7 @@ def cash():
             db.session.add(new_add)
             db.session.commit()
             flash('Cash added', category='success')
+        redirect(url_for('views.cash'))
 
     return render_template("banks.html", user=current_user)
 
@@ -447,38 +449,42 @@ def get_cryptos():
 
 @views.route('/addcrypto', methods=['GET', 'POST'])
 @login_required
-def addcrypto():
-    # add bank information and balance to the database
+def add_crypto():
     if request.method == 'POST':
-        cryptoname = request.form.get('cryptoName')
+        crypto_name = request.form.get('cryptoName')
         amount = request.form.get('cryptoBalance')
-        if len(amount) < 0:
-            flash('Balance Error', category='error')
+        
+        if not amount:
+            flash('Balance is required', category='error')
         else:
-            new_add = Crypto(crypto_name=cryptoname, amount=amount,
-                           user_id=current_user.id)
-            db.session.add(new_add)
-            db.session.commit()
-            flash('Crypto added', category='success')
-        return redirect(url_for('views.addcrypto')) 
+            try:
+                amount = float(amount)
+            except ValueError:
+                flash('Invalid balance', category='error')
+            else:
+                new_crypto = Crypto(crypto_name=crypto_name, amount=amount, user_id=current_user.id)
+                db.session.add(new_crypto)
+                db.session.commit()
+                flash('Crypto added', category='success')
+        
+        return redirect(url_for('views.add_crypto'))
 
     return render_template("crypto.html", user=current_user)
+
 
 @views.route('/update_crypto/<int:crypto_id>', methods=['POST'])
 def update_crypto(crypto_id):
     crypto = Crypto.query.get(crypto_id)
 
-    if crypto is None:
-        # Handle the case where the cryptocurrency with the given ID does not exist
+    if not crypto:
         return jsonify({'error': 'Cryptocurrency not found'})
 
     updated_amount_str = request.form.get('add-crypto-amount')
 
-    if updated_amount_str is not None and updated_amount_str.strip() != '':
+    if updated_amount_str:
         try:
             updated_amount = float(updated_amount_str)
         except ValueError:
-            # Handle the case where the updated amount cannot be converted to a float
             return jsonify({'error': 'Invalid amount'})
 
         crypto.amount = updated_amount
@@ -486,19 +492,19 @@ def update_crypto(crypto_id):
 
         # Additional code for handling success/failure and redirecting
 
-        return redirect(url_for('views.addcrypto'))
-    else:
-        # Handle the case where the updated amount is missing or empty
-        return jsonify({'error': 'Updated amount is required'})
+        return redirect(url_for('views.add_crypto'))
     
+    return jsonify({'error': 'Updated amount is required'})
+
+
 @views.route('/crypto/<int:crypto_id>', methods=['POST'])
 @login_required
 def delete_crypto(crypto_id):
     crypto = Crypto.query.get(crypto_id)
-    if crypto:
-        if crypto.user_id == current_user.id:
-            db.session.delete(crypto)
-            db.session.commit()
-            return jsonify({"message": "Bank deleted successfully."})
 
-    return jsonify({"message": "Failed to delete the bank."}), 400
+    if crypto and crypto.user_id == current_user.id:
+        db.session.delete(crypto)
+        db.session.commit()
+        return jsonify({"message": "Crypto deleted successfully."})
+
+    return jsonify({"message": "Failed to delete the crypto."}), 400
