@@ -297,7 +297,13 @@ function deleteCrypto(cryptoId, csrfToken) {
         "X-CSRFToken": csrfToken,
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to delete the Crypto.");
+        }
+      })
       .then((data) => {
         if (data.message === "Crypto deleted successfully.") {
           location.reload();

@@ -440,17 +440,68 @@ def get_cryptos():
 
     try:
         response = requests.get(url, params=parameters, headers=headers)
-        data = json.loads(response.text)
+        data = response.json()
+
+        # Calculate the total investment for each cryptocurrency
+        for crypto in data['data']:
+            crypto_id = crypto['id']
+            crypto_obj = Crypto.query.filter_by(crypto_id=crypto_id, user_id=current_user.id).first()
+            if crypto_obj:
+                crypto['total_investment'] = crypto['quote']['USD']['price'] * crypto_obj.amount
+            else:
+                crypto['total_investment'] = 0
+
         return jsonify(data)
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)})
 
-    
+
+@views.route('/crypto', methods=['GET'])
+@login_required
+def crypto():
+    cryptos = Crypto.query.filter_by(user_id=current_user.id).all()
+    crypto_data = []
+
+    for crypto in cryptos:
+        crypto_id = crypto.crypto_id
+        crypto_name = crypto.crypto_name
+
+        # Fetch the current price of the crypto using the CoinMarketCap API
+        url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
+        parameters = {
+            'id': crypto_id,
+            'convert': 'USD'
+        }
+        headers = {
+            'Accepts': 'application/json',
+            'X-CMC_PRO_API_KEY': 'd2d0d2d8-2f25-453e-a4e1-b78a89783a76'  # Replace with your own API key
+        }
+
+        try:
+            response = requests.get(url, params=parameters, headers=headers)
+            data = response.json()
+
+            if 'data' in data:
+                crypto_data.append({
+                    'id': crypto.id,  # This is the ID of the crypto in the database, not the 'id' from the API response
+                    'crypto_id': crypto_id,
+                    'crypto_name': crypto_name,
+                    'amount': crypto.amount,
+                    'current_price': round(data['data'][str(crypto_id)]['quote']['USD']['price'], 2),
+                    'total_investment': crypto.amount * data['data'][str(crypto_id)]['quote']['USD']['price']
+                })
+        except requests.exceptions.RequestException as e:
+            print('Error:', str(e))
+
+    return render_template('crypto.html', user=current_user, cryptos=crypto_data)
+
+   
 
 @views.route('/addcrypto', methods=['GET', 'POST'])
 @login_required
 def add_crypto():
     if request.method == 'POST':
+        crypto_id = request.form.get('cryptoId')
         crypto_name = request.form.get('cryptoName')
         amount = request.form.get('cryptoBalance')
         
@@ -462,12 +513,12 @@ def add_crypto():
             except ValueError:
                 flash('Invalid balance', category='error')
             else:
-                new_crypto = Crypto(crypto_name=crypto_name, amount=amount, user_id=current_user.id)
+                new_crypto = Crypto(crypto_id=crypto_id, crypto_name=crypto_name, amount=amount, user_id=current_user.id)
                 db.session.add(new_crypto)
                 db.session.commit()
                 flash('Crypto added', category='success')
         
-        return redirect(url_for('views.add_crypto'))
+        return redirect(url_for('views.crypto'))
 
     return render_template("crypto.html", user=current_user)
 
@@ -492,7 +543,7 @@ def update_crypto(crypto_id):
 
         # Additional code for handling success/failure and redirecting
 
-        return redirect(url_for('views.add_crypto'))
+        return redirect(url_for('views.crypto'))
     
     return jsonify({'error': 'Updated amount is required'})
 

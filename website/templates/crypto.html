@@ -84,12 +84,12 @@
       </tr>
     </thead>
     <tbody>
-      {% for crypto in user.cryptos %}
+      {% for crypto in cryptos %}
       <tr>
         <td>{{ crypto.crypto_name }}</td>
         <td>{{ crypto.amount }}</td>
-        <td>{{ crypto.amount }}</td>
-        <td>{{ crypto.amount }}</td>
+        <td>{{ crypto.current_price }}$</td>
+        <td>{{ crypto.total_investment }}$</td>
         <td>
           <button
             type="button"
