@@ -17,6 +17,7 @@ class User(db.Model, UserMixin):
     mains = db.relationship('Main', back_populates='user')
 
     savings = db.relationship('Saving', back_populates='user')
+    cryptos = db.relationship('Crypto', back_populates='user')
 
     # um utilizador pode ter muitos bancos
     banks = db.relationship('Bank', back_populates='user')
@@ -119,3 +120,14 @@ class GeneratedReport(db.Model):
     generated_at = db.Column(db.DateTime, nullable=False, default=func.now())
 
     user = db.relationship('User', backref=db.backref('generated_reports', lazy=True))
+
+
+class Crypto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    crypto_id = db.Column(db.Integer, nullable=False)
+    crypto_name = db.Column(db.String(10000), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    user = db.relationship('User', back_populates='cryptos')

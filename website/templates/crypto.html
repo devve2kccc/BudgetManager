@@ -19,4 +19,155 @@
   type="text/javascript"
   src="https://files.coinmarketcap.com/static/widget/coinMarquee.js"
 ></script>
+
+<div class="container">
+  <h2 class="text-center">Your Savings</h2>
+  <section class="add-crypto-container">
+    <div class="form-crypto">
+      <form action="/addcrypto" method="POST" class="text-center">
+        <div class="form-group">
+          <label for="cryptoInput">Cryptocurrency Name</label>
+          <div class="dropdown">
+            <input
+              type="text"
+              class="form-control"
+              name="cryptoName"
+              id="cryptoInput"
+              placeholder="Enter Cryptocurrency Name"
+              data-toggle="dropdown"
+            />
+            <div
+              id="cryptoDropdown"
+              class="dropdown-menu"
+              aria-labelledby="cryptoInput"
+            ></div>
+          </div>
+        </div>
+        <input type="hidden" name="cryptoId" id="cryptoId" />
+        <input type="hidden" name="cryptoSymbol" id="cryptoSymbol" />
+        <div class="form-group">
+          <label for="cryptoPrice">Cryptocurrency Price</label>
+          <input
+            type="text"
+            class="form-control"
+            name="cryptoPrice"
+            id="cryptoPrice"
+            placeholder="Cryptocurrency Price"
+            readonly
+          />
+        </div>
+        <div class="form-group">
+          <label for="cryptoBalance">Balance</label>
+          <input
+            type="text"
+            class="form-control"
+            name="cryptoBalance"
+            id="cryptoBalance"
+            placeholder="Enter Balance"
+          />
+        </div>
+        <button type="submit" class="btn btn-success mt-2">
+          <i class="fa-solid fa-plus fa-beat" style="color: #ffffff"></i>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <table class="table bg-white table-hover table-responsive">
+    <thead>
+      <tr>
+        <th scope="col">Crypto Name</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Price</th>
+        <th scope="col">Holding</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for crypto in cryptos %}
+      <tr>
+        <td>{{ crypto.crypto_name }}</td>
+        <td>{{ crypto.amount }}</td>
+        <td>{{ crypto.current_price }}$</td>
+        <td>{{ crypto.total_investment }}$</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#add-crypto-modal-{{ crypto.id }}"
+          >
+            Add
+          </button>
+          <div
+            class="modal"
+            tabindex="-1"
+            id="add-crypto-modal-{{ crypto.id }}"
+          >
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <form action="/update_crypto/{{ crypto.id }}" method="POST">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Crypto {{ crypto.crypto_name }}</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body text-center">
+                    <label for="add-crypto-amount">Total Crypto Holding</label>
+                    <input
+                      type="number"
+                      name="add-crypto-amount"
+                      id="add-crypto-amount"
+                    />
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="submit"
+                      name="action"
+                      value="subtract"
+                      class="btn btn-danger"
+                    >
+                      <i class="fa-solid fa-minus" style="color: #ffffff"></i>
+                    </button>
+                    <button
+                      type="submit"
+                      name="action"
+                      value="add"
+                      class="btn btn-success"
+                    >
+                      <i class="fa-solid fa-plus" style="color: #ffffff"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <button
+            class="btn btn-danger"
+            onclick="deleteCrypto({{ crypto.id }})"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='api.js') }}"
+></script>
 {% endblock %}
