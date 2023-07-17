@@ -488,7 +488,7 @@ def crypto():
                     'crypto_name': crypto_name,
                     'amount': crypto.amount,
                     'current_price': round(data['data'][str(crypto_id)]['quote']['USD']['price'], 2),
-                    'total_investment': crypto.amount * data['data'][str(crypto_id)]['quote']['USD']['price']
+                    'total_investment': round(crypto.amount * data['data'][str(crypto_id)]['quote']['USD']['price'], 2)
                 })
         except requests.exceptions.RequestException as e:
             print('Error:', str(e))
