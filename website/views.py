@@ -241,6 +241,87 @@ def cash():
 
     return render_template("banks.html", user=current_user)
 
+@views.route('/update_cash/<int:cash_id>', methods=['POST'])
+def update_cash(cash_id):
+    cash = CashSources.query.get(cash_id)
+
+    if not cash:
+        return jsonify({'error': 'Cash not found'})
+
+    action = request.form.get('action')
+
+    if action == 'subtract':
+        updated_amount_str = request.form.get('add-cash-amount')
+        if updated_amount_str:
+            try:
+                updated_amount = float(updated_amount_str)
+                cash.balance -= updated_amount
+                db.session.commit()
+                return redirect(url_for('views.cash'))  # Redirect to the appropriate page after subtracting
+            except ValueError:
+                return jsonify({'error': 'Invalid amount'})
+
+    elif action == 'add':
+        updated_amount_str = request.form.get('add-cash-amount')
+        if updated_amount_str:
+            try:
+                updated_amount = float(updated_amount_str)
+                cash.balance += updated_amount
+                db.session.commit()
+                return redirect(url_for('views.cash'))  # Redirect to the appropriate page after adding
+            except ValueError:
+                return jsonify({'error': 'Invalid amount'})
+
+    return jsonify({'error': 'Invalid action'})
+
+@views.route('/cashs/<int:cash_id>', methods=['POST'])
+@login_required
+def delete_cash(cash_id):
+    cash = CashSources.query.get(cash_id)
+    if cash:
+        if cash.user_id == current_user.id:
+            db.session.delete(cash)
+            db.session.commit()
+            return jsonify({"message": "Cash deleted successfully."})
+
+    return jsonify({"message": "Failed to delete the Cash."}), 400
+
+
+
+@views.route('/update_bank/<int:bank_id>', methods=['POST'])
+def update_bank(bank_id):
+    bank = Bank.query.get(bank_id)
+
+    if not bank:
+        return jsonify({'error': 'Bank not found'})
+
+    action = request.form.get('action')
+
+    if action == 'subtract':
+        updated_amount_str = request.form.get('add-bank-amount')
+        if updated_amount_str:
+            try:
+                updated_amount = float(updated_amount_str)
+                bank.ammout -= updated_amount
+                db.session.commit()
+                return redirect(url_for('views.banks'))  # Redirect to the appropriate page after subtracting
+            except ValueError:
+                return jsonify({'error': 'Invalid amount'})
+
+    elif action == 'add':
+        updated_amount_str = request.form.get('add-bank-amount')
+        if updated_amount_str:
+            try:
+                updated_amount = float(updated_amount_str)
+                bank.ammout += updated_amount
+                db.session.commit()
+                return redirect(url_for('views.banks'))  # Redirect to the appropriate page after adding
+            except ValueError:
+                return jsonify({'error': 'Invalid amount'})
+
+    return jsonify({'error': 'Invalid action'})
+
+
 
 @views.route('/banks/<int:bank_id>', methods=['POST'])
 @login_required
@@ -285,20 +366,38 @@ def delete_safe(safe_id):
 
     return jsonify({"message": "Failed to delete the Safe."}), 400
 
-@views.route('/savings/update/<int:safe_id>', methods=['POST'])
-@login_required
+
+@views.route('/update_safe/<int:safe_id>', methods=['POST'])
 def update_safe(safe_id):
-    safe = Saving.query.get(safe_id)
-    if safe:
-        if safe.user_id == current_user.id:
-            new_balance = request.form.get('newBalance')
-            if new_balance is not None:
-                safe.balance = new_balance
+    safe = Saving.query.get_or_404(safe_id)
+
+    action = request.form.get('action')
+
+    if action == 'subtract':
+        updated_amount_str = request.form.get('add-safe-amount')
+        if updated_amount_str:
+            try:
+                updated_amount = float(updated_amount_str)
+                safe.balance -= updated_amount
                 db.session.commit()
-                return jsonify({"message": "Safe updated successfully."})
+                flash('Safe balance updated successfully', 'success')
+                return redirect(url_for('views.addsafe'))
+            except ValueError:
+                flash('Invalid amount', 'error')
 
-    return jsonify({"message": "Failed to update the Safe."}), 400
+    elif action == 'add':
+        updated_amount_str = request.form.get('add-safe-amount')
+        if updated_amount_str:
+            try:
+                updated_amount = float(updated_amount_str)
+                safe.balance += updated_amount
+                db.session.commit()
+                flash('Safe balance updated successfully', 'success')
+                return redirect(url_for('views.addsafe'))
+            except ValueError:
+                flash('Invalid amount', 'error')
 
+    return redirect(url_for('views.addsafe'))
 
 
 @views.route('/api/chart-data')
@@ -435,7 +534,7 @@ def get_cryptos():
     }
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': 'd2d0d2d8-2f25-453e-a4e1-b78a89783a76'  # Replace with your own API key
+        'X-CMC_PRO_API_KEY': '743673aa-1539-4837-9a91-84e3fd75b9d2'  # Replace with your own API key
     }
 
     try:
@@ -474,7 +573,7 @@ def crypto():
         }
         headers = {
             'Accepts': 'application/json',
-            'X-CMC_PRO_API_KEY': 'd2d0d2d8-2f25-453e-a4e1-b78a89783a76'  # Replace with your own API key
+            'X-CMC_PRO_API_KEY': '743673aa-1539-4837-9a91-84e3fd75b9d2'  # Replace with your own API key
         }
 
         try:
@@ -525,27 +624,36 @@ def add_crypto():
 
 @views.route('/update_crypto/<int:crypto_id>', methods=['POST'])
 def update_crypto(crypto_id):
-    crypto = Crypto.query.get(crypto_id)
+    crypto = Crypto.query.get_or_404(crypto_id)
 
-    if not crypto:
-        return jsonify({'error': 'Cryptocurrency not found'})
+    action = request.form.get('action')
 
-    updated_amount_str = request.form.get('add-crypto-amount')
+    if action == 'subtract':
+        updated_amount_str = request.form.get('add-crypto-amount')
+        if updated_amount_str:
+            try:
+                updated_amount = float(updated_amount_str)
+                crypto.amount -= updated_amount
+                db.session.commit()
+                flash('Crypto holding updated successfully', 'success')
+                return redirect(url_for('views.crypto'))
+            except ValueError:
+                flash('Invalid amount', 'error')
 
-    if updated_amount_str:
-        try:
-            updated_amount = float(updated_amount_str)
-        except ValueError:
-            return jsonify({'error': 'Invalid amount'})
+    elif action == 'add':
+        updated_amount_str = request.form.get('add-crypto-amount')
+        if updated_amount_str:
+            try:
+                updated_amount = float(updated_amount_str)
+                crypto.amount += updated_amount
+                db.session.commit()
+                flash('Crypto holding updated successfully', 'success')
+                return redirect(url_for('views.crypto'))
+            except ValueError:
+                flash('Invalid amount', 'error')
 
-        crypto.amount = updated_amount
-        db.session.commit()
+    return redirect(url_for('views.crypto'))
 
-        # Additional code for handling success/failure and redirecting
-
-        return redirect(url_for('views.crypto'))
-    
-    return jsonify({'error': 'Updated amount is required'})
 
 
 @views.route('/crypto/<int:crypto_id>', methods=['POST'])

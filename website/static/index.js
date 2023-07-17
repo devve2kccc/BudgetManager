@@ -286,6 +286,37 @@ function deleteSafe(safeId, csrfToken) {
   }
 }
 
+function deleteCash(cashId, csrfToken) {
+  if (confirm("Are you sure you want to delete this Cash?")) {
+    // Retrieve the CSRF token from the HTML meta tag
+    fetch(`/cashs/${cashId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to delete the Cash.");
+        }
+      })
+      .then((data) => {
+        if (data.message === "Cash deleted successfully.") {
+          location.reload();
+        } else {
+          console.log("Failed to delete the Cash.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+}
+
+
 function deleteCrypto(cryptoId, csrfToken) {
   // Show confirmation dialog
   if (confirm("Are you sure you want to delete this crypto?")) {
@@ -316,3 +347,4 @@ function deleteCrypto(cryptoId, csrfToken) {
       });
   }
 }
+

@@ -49,6 +49,7 @@
             class="form-control"
             name="cashSource"
             id="cashSource"
+            placeholder="Enter Cash Source"
           />
         </div>
         <div class="form-group">
@@ -58,6 +59,7 @@
             class="form-control"
             name="cashBalance"
             id="cashBalance"
+            placeholder="Enter Balance"
           />
         </div>
         <button type="submit" class="btn btn-success mt-2">
@@ -78,9 +80,147 @@
       {% for bank in user.banks %}
       <tr>
         <td>{{ bank.bankname }}</td>
-        <td>{{ bank.ammout }}</td>
+        <td>{{ bank.ammout }}$</td>
         <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#add-bank-modal-{{ bank.id }}"
+          >
+            Add
+          </button>
+          <div class="modal" tabindex="-1" id="add-bank-modal-{{ bank.id }}">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <form action="/update_bank/{{ bank.id }}" method="POST">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Bank {{ bank.bankname }}</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body text-center">
+                    <label for="add-bank-amount">Amount</label>
+                    <input
+                      type="number"
+                      name="add-bank-amount"
+                      id="add-bank-amount"
+                    />
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="submit"
+                      name="action"
+                      value="subtract"
+                      class="btn btn-danger"
+                    >
+                      <i class="fa-solid fa-minus" style="color: #ffffff"></i>
+                    </button>
+                    <button
+                      type="submit"
+                      name="action"
+                      value="add"
+                      class="btn btn-success"
+                    >
+                      <i class="fa-solid fa-plus" style="color: #ffffff"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
           <button class="btn btn-danger" onclick="deleteBank({{ bank.id }})">
+            Delete
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="table table-striped table-hover table-responsive">
+    <thead>
+      <tr>
+        <th scope="col">Cash Name</th>
+        <th scope="col">Cash Balance</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cash in user.cash %}
+      <tr>
+        <td>{{ cash.cashname }}</td>
+        <td>{{ cash.balance }}$</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#add-cash-modal-{{ cash.id }}"
+          >
+            Add
+          </button>
+          <div class="modal" tabindex="-1" id="add-cash-modal-{{ cash.id }}">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <form action="/update_cash/{{ cash.id }}" method="POST">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Cash {{ cash.cashname }}</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body text-center">
+                    <label for="add-cash-amount">Amount</label>
+                    <input
+                      type="number"
+                      name="add-cash-amount"
+                      id="add-cash-amount"
+                    />
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="submit"
+                      name="action"
+                      value="subtract"
+                      class="btn btn-danger"
+                    >
+                      <i class="fa-solid fa-minus" style="color: #ffffff"></i>
+                    </button>
+                    <button
+                      type="submit"
+                      name="action"
+                      value="add"
+                      class="btn btn-success"
+                    >
+                      <i class="fa-solid fa-plus" style="color: #ffffff"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-danger" onclick="deleteCash({{ cash.id }})">
             Delete
           </button>
         </td>

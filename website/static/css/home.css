@@ -178,17 +178,18 @@ table {
   width: 100%;
   border-collapse: collapse;
   border-radius: 15px;
-  background-color: #ffffff;
+  background-color: #1e2124;
 }
 
 .table th,
 .table td {
   padding: 12px 15px;
   text-align: left;
+  color: #ffffff;
 }
 
 .table th {
-  background-color: #f5f5f5;
+  background-color: #1e2124;
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -197,14 +198,11 @@ table {
   border-bottom: 1px solid #e0e0e0;
 }
 
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: #f9f9f9;
-}
 
 .expense {
-  background-color: #ff8c8c; /* Set the background color for expense rows */
+  background-color: #ff5858; /* Set the background color for expense rows */
 }
 
 .income {
-  background-color: #8cff8c; /* Set the background color for income rows */
+  background-color: #82fa82; /* Set the background color for income rows */
 }

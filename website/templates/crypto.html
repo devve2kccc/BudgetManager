@@ -95,16 +95,20 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#add-crypto-modal"
+            data-bs-target="#add-crypto-modal-{{ crypto.id }}"
           >
             Add
           </button>
-          <div class="modal" tabindex="-1" id="add-crypto-modal">
+          <div
+            class="modal"
+            tabindex="-1"
+            id="add-crypto-modal-{{ crypto.id }}"
+          >
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
                 <form action="/update_crypto/{{ crypto.id }}" method="POST">
                   <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">Crypto {{ crypto.crypto_name }}</h5>
                     <button
                       type="button"
                       class="btn-close"
@@ -128,7 +132,22 @@
                     >
                       Close
                     </button>
-                    <button type="submit" class="btn btn-info">Add</button>
+                    <button
+                      type="submit"
+                      name="action"
+                      value="subtract"
+                      class="btn btn-danger"
+                    >
+                      <i class="fa-solid fa-minus" style="color: #ffffff"></i>
+                    </button>
+                    <button
+                      type="submit"
+                      name="action"
+                      value="add"
+                      class="btn btn-success"
+                    >
+                      <i class="fa-solid fa-plus" style="color: #ffffff"></i>
+                    </button>
                   </div>
                 </form>
               </div>
