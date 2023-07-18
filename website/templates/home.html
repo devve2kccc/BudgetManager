@@ -43,7 +43,15 @@
           class="form-control"
         ></textarea>
         <h5>Amount</h5>
-        <input type="text" name="currency-field" id="amount" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" placeholder="$1,000,000.00">
+        <input
+          type="text"
+          name="currency-field"
+          id="amount"
+          pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+          value=""
+          data-type="currency"
+          placeholder="$1,000,000.00"
+        />
         <div>
           <label for="date">Date:</label>
           <input type="date" id="date" name="date" required />
@@ -61,7 +69,15 @@
             <option value="personal_care">Personal Care</option>
             <option value="education">Education</option>
             <option value="gifts">Gifts and Donations</option>
-            <option value="miscellaneous">Miscellaneous</option>
+            <option value="utilities">Utilities</option>
+            <option value="clothing">Clothing</option>
+            <option value="communication">Communication</option>
+            <option value="insurance">Insurance</option>
+            <option value="subscriptions">Subscriptions</option>
+            <option value="home_maintenance">Home Maintenance</option>
+            <option value="pet_expenses">Pet Expenses</option>
+            <option value="childcare">Childcare</option>
+            <option value="work_expenses">Work Expenses</option>
           </select>
         </div>
         <div>
@@ -70,9 +86,7 @@
         </div>
         <div>
           <label for="payment_method">Payment Method:</label>
-          <select
-            id="payment_method"
-            name="payment_method">
+          <select id="payment_method" name="payment_method">
             <option value="cash" selected>Cash</option>
             <option value="bank">Bank</option>
           </select>
@@ -116,7 +130,15 @@
           class="form-control"
         ></textarea>
         <h5>Amount</h5>
-        <input type="text" name="currency-field" id="amount" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" placeholder="$1,000,000.00">
+        <input
+          type="text"
+          name="currency-field"
+          id="amount"
+          pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"
+          value=""
+          data-type="currency"
+          placeholder="$1,000,000.00"
+        />
         <div>
           <label for="date">Date:</label>
           <input type="date" id="date" name="date" required />
@@ -125,9 +147,14 @@
           <label for="category">Category:</label>
           <select id="category" name="category">
             <option value="">Select an existing category</option>
-            <option value="job">JOB</option>
+            <option value="job">Salary</option>
             <option value="transportation">Transportation</option>
             <option value="housing">Housing</option>
+            <option value="freelance">Freelance</option>
+            <option value="investments">Investments</option>
+            <option value="gifts">Gifts</option>
+            <option value="rental_income">Rental Income</option>
+            <option value="other">Other</option>
           </select>
         </div>
         <div>
@@ -136,9 +163,7 @@
         </div>
         <div>
           <label for="payment_method">Payment Method:</label>
-          <select
-            id="payment_method"
-            name="payment_method">
+          <select id="payment_method" name="payment_method">
             <option value="cash" selected>Cash</option>
             <option value="bank">Bank</option>
           </select>

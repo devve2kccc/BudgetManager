@@ -178,17 +178,18 @@ table {
   width: 100%;
   border-collapse: collapse;
   border-radius: 15px;
-  background-color: #1e2124;
+  background-color: #ffffff;
 }
 
 .table th,
 .table td {
   padding: 12px 15px;
   text-align: left;
-  color: #ffffff;
+  color: #101010; 
 }
 
 .table th {
+  color: #ffffff;
   background-color: #1e2124;
   font-weight: bold;
   text-transform: uppercase;
@@ -200,9 +201,9 @@ table {
 
 
 .expense {
-  background-color: #ff5858; /* Set the background color for expense rows */
+  background: linear-gradient(135deg, #FF8888, #FF5858); /* Soft gradient for expense rows */
 }
 
 .income {
-  background-color: #82fa82; /* Set the background color for income rows */
+  background: linear-gradient(135deg, #B4FAB4, #82FA82); /* Soft gradient for income rows */
 }
